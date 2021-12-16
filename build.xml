@@ -1,0 +1,9 @@
+<project default="patch">
+	<target name="patch">
+	  <echo>The Oxygen installation dir is: '${oxygen.home}'</echo>
+		
+		
+		
+	</target>
+
+</project>
