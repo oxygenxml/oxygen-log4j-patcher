@@ -1,35 +1,42 @@
 #!/bin/sh
+echo This script upgrades the log4j library to version 2.16 in an Oxygen XML standalone application.
 
-echo "This script upgrades the log4j library to version 2.16 in an Oxygen XML standalone application."
+echo Please enter the full path to the Oxygen installation folder.
+echo For example, on Mac: /Applications/Oxygen XML Editor
+echo Enter path:
+read LINE </dev/tty
+export OXYGEN_HOME=$LINE
 
-. "config.sh"
-
-if not exist "%OXYGEN_HOME%" (
-  echo Please enter the full path to the Oxygen installation folder. 
-  echo You can locate the installation folder by right-clicking the 
-  echo Oxygen application shortcut and choosing "Properties" from the 
-  echo menu. Use the path from the "Start in" field.
-  echo For example: C:\Program Files\Oxygen XML Editor 22
-
-  set /p OXYGEN_HOME=Enter path:  
-)
+if [ ! -f "$OXYGEN_HOME/oxygen.sh" ]; then
+  echo This is not an Oxygen Install dir: $OXYGEN_HOME
+  exit -1
+fi
 
 
-set JAVA_HOME=^!OXYGEN_HOME^!\jre
+OXYGEN_JAVA=java
+if [ -f "${OXYGEN_HOME}/jre/bin/java" ]
+then
+  OXYGEN_JAVA="${OXYGEN_HOME}/jre/bin/java"
+fi
+if [ -f "${OXYGEN_HOME}/.install4j/jre.bundle/Contents/Home/jre/bin/java" ]
+then
+  OXYGEN_JAVA="${OXYGEN_HOME}/.install4j/jre.bundle/Contents/Home/jre/bin/java"
+fi
+if [ -f "${OXYGEN_HOME}/.install4j/jre.bundle/Contents/Home/bin/java" ]
+then
+  OXYGEN_JAVA="${OXYGEN_HOME}/.install4j/jre.bundle/Contents/Home/bin/java"
+fi
+if [ -f "${JAVA_HOME}/bin/java" ]
+then
+  OXYGEN_JAVA="${JAVA_HOME}/bin/java"
+fi
 
-if not exist "%JAVA_HOME%\bin\java.exe" ( 
-  echo Cannot find the Java executable. 
-  echo Tried: %JAVA_HOME%\bin\java.exe
-  echo Please configure correctly the JAVA_HOME in the 'config.cmd' file.
-  goto :end
-)
 
+echo Using java executable: $OXYGEN_JAVA
 
 echo Make sure the Oxygen application is closed before proceeding.
-set /p MSG= Hit ENTER when ready...
-echo Configuration ok.
+echo Hit ENTER when ready...
+read W </dev/tty
 
-"%JAVA_HOME%\bin\java.exe" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "%OXYGEN_HOME%"
-
-:end
+"$OXYGEN_JAVA" -cp target/classes com.oxygenxml.patcher.log4j.Patcher
 echo Leaving..
