@@ -1,4 +1,6 @@
 @echo off
+echo This script upgrades the log4j library to version 2.16 in an Oxygen XML standalone application.
+
 setlocal EnableDelayedExpansion 
 call config.bat
 
@@ -24,6 +26,9 @@ if not exist "%JAVA_HOME%\bin\java.exe" (
   goto :end
 )
 
+
+echo Make sure the Oxygen application is closed before proceeding.
+set /p MSG= Hit ENTER when ready...
 echo Configuration ok.
 
 "%JAVA_HOME%\bin\java.exe" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "%OXYGEN_HOME%"
