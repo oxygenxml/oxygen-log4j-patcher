@@ -2,8 +2,26 @@
 	<target name="patch">
 	  <echo>The Oxygen installation dir is: '${oxygen.home}'</echo>
 		
-		
-		
 	</target>
+	
+	
+	<target name="test">
+	    <dirset id="dir.name" dir="${oxygen.home}" includes="*/webapps"/>
+	    <copy todir="${phx.tomcat.dir}" enableMultipleMappings="true" verbose="true">
+	        <fileset file="lib/log4j-core-2.16.0"/>
+	        <scriptmapper language="javascript">
+	        <![CDATA[
+	            var dirSet = project.getReference( "dir.name" );
+	            var ds = dirSet.getDirectoryScanner( project );
+	            var includes = ds.getIncludedDirectories( );
+	            for ( var i = 0; i < includes.length; i++ )
+	            {
+	                self.addMappedName( includes[i] + "/" + source );
+	            }
+	        ]]>
+	        </scriptmapper>
+	    </copy>
+	</target>
+
 
 </project>
