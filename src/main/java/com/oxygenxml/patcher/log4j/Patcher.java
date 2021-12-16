@@ -22,6 +22,37 @@ import java.util.regex.Pattern;
 public class Patcher {
 
   /**
+   * A change is a new name and a path to a replacement file. 
+   */
+  private class Change {    
+    private Change(String newName, String pathToReplacement) {
+      this.newName = newName;
+      this.pathToReplacement = pathToReplacement;
+    }
+    private String newName;
+    private String pathToReplacement;
+
+    /**
+     * Gets the new name of the resource.
+     * The replacement resource will be copied under this name.
+     * This name will be used also in the content references replacements. (like scripts)
+     * @return the new name.
+     */
+    private String getNewName() {
+      return newName;
+    }
+    
+    /**
+     * The path to the new resource
+     * 
+     * @return The path.
+     */
+    private String getPathToReplacement() {
+      return pathToReplacement;
+    }
+  }
+  
+  /**
    * The log4j version.
    */
   protected static final String NEW_LOG4J_VERSION = "2.16.0";
@@ -32,16 +63,23 @@ public class Patcher {
   private File                     installFolder;
 
   /**
-   * Maps between a log4j jar file name and the new name.
+   * Maps between a jar file name and its the new name, and the source that will
+   * be copied under the new name. The old jar is removed.
+   * 
+   * The pattern is applied also in the content of the files identified by 
+   * {@link #EXTENSIONS_OF_FILES_WITH_REFERENCES}
    */
-  private HashMap<Pattern, String> replacementMap = new HashMap<>();
+  private HashMap<Pattern, Change> fileAndContentReplacementMap = new HashMap<>();
 
+  /**
+   * The new version of log4j.
+   */
   private String newLog4jVersion;
 
   /**
    * Text replacements that apply only to the third-party-components.xml files.
    */
-  private HashMap<Pattern, String> thirdPartyReplacementMap = new HashMap<>();
+  private HashMap<Pattern, Change> thirdPartyReplacementMap = new HashMap<>();
 
   /**
    * Constructor.
@@ -54,16 +92,46 @@ public class Patcher {
     this.installFolder = installFolder;
     this.newLog4jVersion = newLog4jVersion;
     
-    replacementMap.put(Pattern.compile("log4j-core-(.*?).jar"), "log4j-core-" + newLog4jVersion + ".jar");
-    replacementMap.put(Pattern.compile("log4j-api-(.*?).jar"), "log4j-api-" + newLog4jVersion + ".jar");
-    replacementMap.put(Pattern.compile("log4j-1.2-api-(.*?).jar"), "log4j-1.2-api-" + newLog4jVersion + ".jar");
     
-    replacementMap.put(Pattern.compile("calabash-log4j-core-(.*?).jar"), "calabash-log4j-core-" + newLog4jVersion + ".jar");
-    replacementMap.put(Pattern.compile("calabash-log4j-api-(.*?).jar"), "calabash-log4j-api-" + newLog4jVersion + ".jar");
-    replacementMap.put(Pattern.compile("calabash-log4j-1.2-api-(.*?).jar"), "calabash-log4j-1.2-api-" + newLog4jVersion + ".jar");
-   
-    thirdPartyReplacementMap.put(Pattern.compile("<version>2.14.0</version>"), "<version>" + newLog4jVersion + "</version>");
-    thirdPartyReplacementMap.put(Pattern.compile("<version>2.13.0</version>"), "<version>" + newLog4jVersion + "</version>");
+    fileAndContentReplacementMap.put(Pattern.compile("log4j-core-(.*?).jar"), new Change(
+        "log4j-core-" + newLog4jVersion + ".jar",   // For the new name and in content replacements. 
+        "lib/log4j-core-" + newLog4jVersion + ".jar" // Bytes source.
+    ));
+    
+    fileAndContentReplacementMap.put(Pattern.compile("log4j-api-(.*?).jar"), new Change(
+        "log4j-api-" + newLog4jVersion + ".jar",
+        "lib/log4j-api-" + newLog4jVersion + ".jar"
+        ));
+    
+    fileAndContentReplacementMap.put(Pattern.compile("log4j-1.2-api-(.*?).jar"), new Change(
+        "log4j-1.2-api-" + newLog4jVersion + ".jar",
+        "lib/log4j-1.2-api-" + newLog4jVersion + ".jar"
+        ));
+    
+    fileAndContentReplacementMap.put(Pattern.compile("calabash-log4j-core-(.*?).jar"), new Change(
+        "calabash-log4j-core-" + newLog4jVersion + ".jar",  
+        "lib/log4j-core-" + newLog4jVersion + ".jar"
+    ));
+    
+    fileAndContentReplacementMap.put(Pattern.compile("calabash-log4j-api-(.*?).jar"), new Change(
+        "calabash-log4j-api-" + newLog4jVersion + ".jar",
+        "lib/log4j-api-" + newLog4jVersion + ".jar"
+        ));
+    
+    fileAndContentReplacementMap.put(Pattern.compile("calabash-log4j-1.2-api-(.*?).jar"), new Change(
+        "calabash-log4j-1.2-api-" + newLog4jVersion + ".jar",
+        "lib/log4j-1.2-api-" + newLog4jVersion + ".jar"
+        ));
+    
+    
+    thirdPartyReplacementMap.put(Pattern.compile("<version>2.14.0</version>"), new Change(
+        "<version>" + newLog4jVersion + "</version>",
+        null
+    ));
+    thirdPartyReplacementMap.put(Pattern.compile("<version>2.13.0</version>"), new Change(
+        "<version>" + newLog4jVersion + "</version>",
+        null
+    ));
   }
 
   /**
@@ -149,12 +217,22 @@ public class Patcher {
     }
   }
 
-  protected static final String[] FILES_WITH_REFS_EXTENSIONS = new String[] { ".properties", ".conf", ".framework", ".txt", ".list", ".bat", ".cmd", ".sh",
+  // @formatter:off
+  protected static final String[] EXTENSIONS_OF_FILES_WITH_REFERENCES = new String[] {
+      ".properties", 
+      ".conf", 
+      ".framework", 
+      ".txt", 
+      ".list", 
+      ".bat", 
+      ".cmd", 
+      ".sh",
       ".xml" };
+//@formatter:on
 
   static boolean canContainLog4jReferences(String fileName) {
     boolean found = false;
-    for (String ext : FILES_WITH_REFS_EXTENSIONS) {
+    for (String ext : EXTENSIONS_OF_FILES_WITH_REFERENCES) {
       if (fileName.endsWith(ext)) {
         found = true;
         break;
@@ -180,7 +258,7 @@ public class Patcher {
 
     // Replace all
     String newContent = content;
-    newContent = applyPatterns(replacementMap, newContent);
+    newContent = applyPatterns(fileAndContentReplacementMap, newContent);
     
     if (file.getName().endsWith("third-party-components.xml")) {
       newContent = applyPatterns(thirdPartyReplacementMap, newContent);
@@ -195,10 +273,10 @@ public class Patcher {
 
   }
 
-  private String applyPatterns(HashMap<Pattern, String> patterns, String newContent) {
+  private String applyPatterns(HashMap<Pattern, Change> patterns, String newContent) {
     Set<Pattern> keySet = patterns.keySet();
     for (Pattern pattern : keySet) {
-      newContent = pattern.matcher(newContent).replaceAll(patterns.get(pattern));
+      newContent = pattern.matcher(newContent).replaceAll(patterns.get(pattern).newName);
     }
     return newContent;
   }
@@ -212,10 +290,10 @@ public class Patcher {
    *           When the file cannot be accessed.
    */
   private void replaceLog4jFile(File toReplace) throws IOException {
-    Set<Pattern> keySet = replacementMap.keySet();
+    Set<Pattern> keySet = fileAndContentReplacementMap.keySet();
     for (Pattern pattern : keySet) {
       if (pattern.matcher(toReplace.getName()).matches()) {
-        File copySource = new File("lib", replacementMap.get(pattern));
+        File copySource = new File(fileAndContentReplacementMap.get(pattern).pathToReplacement);
         File copyTarget = new File(toReplace.getParentFile(), copySource.getName());
 
         if (copyTarget.equals(toReplace)) {
