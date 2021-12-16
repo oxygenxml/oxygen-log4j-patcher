@@ -15,7 +15,7 @@ if not exist "%OXYGEN_HOME%\oxygen.bat" (
 
 if exist "%OXYGEN_HOME%\jre\bin\java.exe" (
   echo Using java from Oxygen install folder.
-  set JAVA_HOME=^!OXYGEN_HOME^!\jre
+  set JAVA_HOME=%OXYGEN_HOME%\jre
 ) 
 
 if not exist "%JAVA_HOME%\bin\java.exe" ( 
