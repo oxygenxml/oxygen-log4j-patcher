@@ -165,13 +165,23 @@ public class Patcher {
       System.out.println("ERROR!");
       System.out.println("You do not have permissions to change the file: " + e.getFile());
       System.out.println("Please run the script with adiministrator priviledges.");
+      System.out.println("To do it:");
       if (isWindows()) {
-        System.out.println("This is how to do it:");
         System.out.println("  1. Press the 'Windows' start button");
         System.out.println("  2. Type 'cmd' ");
         System.out.println("  3. From the right side of the menu choose 'Run as administrator'. ");
         System.out.println("  4. Type cd \"" + new File(".").getCanonicalPath() + "\"  ");
         System.out.println("  5. Run again this script");
+      } else if (isMac()) {
+        System.out.println("  1. Log in as an user with administrator privileges");
+        System.out.println("  2. Start a terminal");
+        System.out.println("  4. Type cd \"" + new File(".").getCanonicalPath() + "\"  ");
+        System.out.println("  5. Run again this script");        
+      } else {
+        System.out.println("  1. Start a terminal");
+        System.out.println("  2. Type 'sudo -s' and press ENTER.");
+        System.out.println("  4. Type cd \"" + new File(".").getCanonicalPath() + "\"  ");
+        System.out.println("  5. Run again this script");                
       }
 
     } catch (IOException e) {
@@ -185,6 +195,9 @@ public class Patcher {
 
   private static boolean isWindows() {
     return String.valueOf(System.getProperties().get("os.name")).toLowerCase().contains("win");
+  }
+  private static boolean isMac() {
+    return String.valueOf(System.getProperties().get("os.name")).toLowerCase().contains("mac");
   }
 
   /**
