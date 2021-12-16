@@ -22,25 +22,32 @@ import java.util.regex.Pattern;
 public class Patcher {
 
   /**
-   * Installation folder. 
+   * The log4j version.
    */
-  private File                   installFolder;
+  protected static final String NEW_LOG4J_VERSION = "2.16.0";
+
+  /**
+   * Installation folder.
+   */
+  private File                     installFolder;
 
   /**
    * Maps between a log4j jar file name and the new name.
    */
-  private HashMap<Pattern, String> replacementMap = new HashMap<Pattern, String>();
+  private HashMap<Pattern, String> replacementMap = new HashMap<>();
 
   /**
    * Constructor.
    * 
-   * @param installFolder Installation folder.
+   * @param installFolder
+   *          Installation folder.
+   * @param newLog4jVersion
    */
-  public Patcher(File installFolder) {
+  public Patcher(File installFolder, String newLog4jVersion) {
     this.installFolder = installFolder;
-    replacementMap.put(Pattern.compile("log4j-core-(.*?).jar"), "log4j-core-2.16.0.jar");
-    replacementMap.put(Pattern.compile("log4j-api-(.*?).jar"), "log4j-api-2.16.0.jar");
-    replacementMap.put(Pattern.compile("log4j-1.2-api-(.*?).jar"), "log4j-1.2-api-2.16.0.jar");
+    replacementMap.put(Pattern.compile("log4j-core-(.*?).jar"), "log4j-core-" + newLog4jVersion + ".jar");
+    replacementMap.put(Pattern.compile("log4j-api-(.*?).jar"), "log4j-api-" + newLog4jVersion + ".jar");
+    replacementMap.put(Pattern.compile("log4j-1.2-api-(.*?).jar"), "log4j-1.2-api-" + newLog4jVersion + ".jar");
   }
 
   /**
@@ -50,27 +57,38 @@ public class Patcher {
    *          The first argument is the Oxygen installation folder.
    * @throws IOException
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     String installFolder = args[0];
+    String newLog4jVersion = NEW_LOG4J_VERSION;
+    if (args.length > 1) {
+      newLog4jVersion = args[1];
+    }
+
     try {
-      new Patcher(new File(installFolder)).scanAndReplaceFiles();
+      new Patcher(new File(installFolder), newLog4jVersion).scanAndReplaceFiles();
     } catch (AccessDeniedException e) {
-      System.out.println("******************************************************");      
-      System.out.println("ERROR!");      
+      System.out.println();
+      System.out.println();
+      System.out.println("=============================================================");
+      System.out.println("ERROR!");
       System.out.println("You do not have permissions to change the file: " + e.getFile());
       System.out.println("Please run the script with adiministrator priviledges.");
-      System.out.println("This is how to do it:");
-      if (isWindows()) {        
+      if (isWindows()) {
+        System.out.println("This is how to do it:");
         System.out.println("  1. Press the 'Windows' start button");
         System.out.println("  2. Type 'cmd' ");
         System.out.println("  3. From the right side of the menu choose 'Run as administrator'. ");
-        System.out.println("  4. Type 'cd \"" + new File(".") +  "\"'. ");
-        System.out.println("  5. Run again this script");              
+        System.out.println("  4. Type cd \"" + new File(".").getCanonicalPath() + "\"  ");
+        System.out.println("  5. Run again this script");
       }
-      
+
     } catch (IOException e) {
+      System.out.println();
+      System.out.println();
+      System.out.println("=============================================================");
+      System.out.println("ERROR!");
       e.printStackTrace(System.out);
-    } 
+    }
   }
 
   private static boolean isWindows() {
@@ -78,10 +96,11 @@ public class Patcher {
   }
 
   /**
-   * Scans and replaces log4j jar files with the newer version 
-   * and also changes the references to the jar files.
+   * Scans and replaces log4j jar files with the newer version and also changes
+   * the references to the jar files.
    * 
-   * @throws IOException When the replacement failed.
+   * @throws IOException
+   *           When the replacement failed.
    */
   public void scanAndReplaceFiles() throws IOException {
     System.out.println("Start scanning.");
@@ -90,7 +109,6 @@ public class Patcher {
   }
 
   private void scanAndReplaceFiles(File folder) throws IOException {
-    System.out.println(folder);
     File[] files = folder.listFiles();
 
     for (File file : files) {
@@ -107,18 +125,9 @@ public class Patcher {
     }
   }
 
-  public static final String[] FILES_WITH_REFS_EXTENSIONS = new String[] {
-          ".properties", 
-          ".conf",
-          ".framework",
-          ".txt",
-          ".list",
-          ".bat",
-          ".cmd",
-          ".sh",
-          ".xml"};
-      
-  
+  protected static final String[] FILES_WITH_REFS_EXTENSIONS = new String[] { ".properties", ".conf", ".framework", ".txt", ".list", ".bat", ".cmd", ".sh",
+      ".xml" };
+
   static boolean canContainLog4jReferences(String fileName) {
     boolean found = false;
     for (String ext : FILES_WITH_REFS_EXTENSIONS) {
@@ -128,52 +137,67 @@ public class Patcher {
       }
     }
     return found;
-    
+
   }
 
   /**
    * Replaces the references to the log4j libraries.
    * 
-   * @param file The file that can contain references.
-   * @throws IOException When the file cannot be accessed. 
+   * @param file
+   *          The file that can contain references.
+   * @throws IOException
+   *           When the file cannot be accessed.
    */
   private void replaceLog4jReferencesInContent(File file) throws IOException {
 
     // Read the content.
     byte[] bytes = Files.readAllBytes(file.toPath());
     String content = new String(bytes, StandardCharsets.UTF_8);
-    
-    
-    // Replace all 
+
+    // Replace all
     Set<Pattern> keySet = replacementMap.keySet();
     String newContent = content;
     for (Pattern pattern : keySet) {
-      newContent = pattern.matcher(newContent).replaceAll(replacementMap.get(pattern));      
+      newContent = pattern.matcher(newContent).replaceAll(replacementMap.get(pattern));
     }
     if (!newContent.equals(content)) {
       // Write the content.
-      System.out.println("Updating references in: " + file + " .. ");
+      System.out.print("Updating references in: " + file + " .. ");
       Files.write(file.toPath(), newContent.getBytes(StandardCharsets.UTF_8));
       System.out.println("ok.");
-    } 
-    
+    }
+
   }
 
   /**
    * Replaces a jar file with the newer version.
    * 
-   * @param toReplace The file to be replaced by the a new jar file.
-   * @throws IOException When the file cannot be accessed. 
+   * @param toReplace
+   *          The file to be replaced by the a new jar file.
+   * @throws IOException
+   *           When the file cannot be accessed.
    */
   private void replaceLog4jFile(File toReplace) throws IOException {
     Set<Pattern> keySet = replacementMap.keySet();
     for (Pattern pattern : keySet) {
       if (pattern.matcher(toReplace.getName()).matches()) {
-        File replacement = new File("lib", replacementMap.get(pattern));
-        System.out.print("Updating: " + toReplace + " with " + replacement + " .. ");
-        Files.copy(replacement.toPath(), new File(toReplace.getParentFile(), replacement.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-        Files.delete(toReplace.toPath());
-        System.out.println("ok.");
+        File copySource = new File("lib", replacementMap.get(pattern));
+        File copyTarget = new File(toReplace.getParentFile(), copySource.getName());
+
+        if (copyTarget.equals(toReplace)) {
+          System.out.print("Already updated: " + copyTarget);
+        } else {
+          if (toReplace.exists()) {
+            Files.delete(toReplace.toPath());
+          }
+
+          if (!copyTarget.exists()) {
+            System.out.print("Updating: " + toReplace + " with " + copySource + " .. ");
+            Files.copy(copySource.toPath(), copyTarget.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("ok.");
+          }
+        }
+
       }
     }
   }
