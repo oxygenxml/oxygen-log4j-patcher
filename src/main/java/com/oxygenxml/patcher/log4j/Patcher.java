@@ -36,6 +36,13 @@ public class Patcher {
    */
   private HashMap<Pattern, String> replacementMap = new HashMap<>();
 
+  private String newLog4jVersion;
+
+  /**
+   * Text replacements that apply only to the third-party-components.xml files.
+   */
+  private HashMap<Pattern, String> thirdPartyReplacementMap = new HashMap<>();
+
   /**
    * Constructor.
    * 
@@ -45,9 +52,18 @@ public class Patcher {
    */
   public Patcher(File installFolder, String newLog4jVersion) {
     this.installFolder = installFolder;
+    this.newLog4jVersion = newLog4jVersion;
+    
     replacementMap.put(Pattern.compile("log4j-core-(.*?).jar"), "log4j-core-" + newLog4jVersion + ".jar");
     replacementMap.put(Pattern.compile("log4j-api-(.*?).jar"), "log4j-api-" + newLog4jVersion + ".jar");
     replacementMap.put(Pattern.compile("log4j-1.2-api-(.*?).jar"), "log4j-1.2-api-" + newLog4jVersion + ".jar");
+    
+    replacementMap.put(Pattern.compile("calabash-log4j-core-(.*?).jar"), "calabash-log4j-core-" + newLog4jVersion + ".jar");
+    replacementMap.put(Pattern.compile("calabash-log4j-api-(.*?).jar"), "calabash-log4j-api-" + newLog4jVersion + ".jar");
+    replacementMap.put(Pattern.compile("calabash-log4j-1.2-api-(.*?).jar"), "calabash-log4j-1.2-api-" + newLog4jVersion + ".jar");
+   
+    thirdPartyReplacementMap.put(Pattern.compile("<version>2.14.0</version>"), "<version>" + newLog4jVersion + "</version>");
+    thirdPartyReplacementMap.put(Pattern.compile("<version>2.13.0</version>"), "<version>" + newLog4jVersion + "</version>");
   }
 
   /**
@@ -105,7 +121,7 @@ public class Patcher {
   public void scanAndReplaceFiles() throws IOException {
     System.out.println("Start scanning.");
     scanAndReplaceFiles(installFolder);
-    System.out.println("End scan.");
+    System.out.println("Successfully updated log4j library to version: " + newLog4jVersion);
   }
 
   private void scanAndReplaceFiles(File folder) throws IOException {
@@ -155,11 +171,13 @@ public class Patcher {
     String content = new String(bytes, StandardCharsets.UTF_8);
 
     // Replace all
-    Set<Pattern> keySet = replacementMap.keySet();
     String newContent = content;
-    for (Pattern pattern : keySet) {
-      newContent = pattern.matcher(newContent).replaceAll(replacementMap.get(pattern));
+    newContent = applyPatterns(replacementMap, newContent);
+    
+    if (file.getName().endsWith("third-party-components.xml")) {
+      newContent = applyPatterns(thirdPartyReplacementMap, newContent);
     }
+    
     if (!newContent.equals(content)) {
       // Write the content.
       System.out.print("Updating references in: " + file + " .. ");
@@ -167,6 +185,14 @@ public class Patcher {
       System.out.println("ok.");
     }
 
+  }
+
+  private String applyPatterns(HashMap<Pattern, String> patterns, String newContent) {
+    Set<Pattern> keySet = patterns.keySet();
+    for (Pattern pattern : keySet) {
+      newContent = pattern.matcher(newContent).replaceAll(patterns.get(pattern));
+    }
+    return newContent;
   }
 
   /**
@@ -185,7 +211,7 @@ public class Patcher {
         File copyTarget = new File(toReplace.getParentFile(), copySource.getName());
 
         if (copyTarget.equals(toReplace)) {
-          System.out.print("Already updated: " + copyTarget);
+          System.out.println("Already updated: " + copyTarget);
         } else {
           if (toReplace.exists()) {
             Files.delete(toReplace.toPath());

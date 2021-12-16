@@ -4,28 +4,29 @@ echo This script upgrades the log4j library to version 2.16 in an Oxygen XML sta
 setlocal EnableDelayedExpansion 
 call config.bat
 
-if not exist "%OXYGEN_HOME%" ( 
-  echo Cannot find the Oxygen installation folder. 
-  echo Tried: %OXYGEN_HOME%.
-  echo -----------------------------------------------------------------------
-  echo Please configure correctly the OXYGEN_HOME in the 'config.cmd' file.
-  echo You can locate it by right-clicking the Oxygen application shortcut
-  echo and choosing "Properties" from the menu. Use the path from the 
-  echo "Start in" field.
-  echo -----------------------------------------------------------------------
+echo Please enter the full path to the Oxygen installation folder.
+echo You can locate the installation folder by right-clicking the Oxygen application shortcut 
+echo and choosing "Properties" from the menu. Use the path from the "Start in" field.
+echo For example: C:\Program Files\Oxygen XML Editor 22
+
+set /p OXYGEN_HOME=Enter path:  
+
+if not exist "%OXYGEN_HOME%\oxygen.bat" (
+  echo This is not an Oxygen Install dir: %OXYGEN_HOME% 
   goto :end
 )
 
-
-set JAVA_HOME=^!OXYGEN_HOME^!\jre
+if exist "%OXYGEN_HOME%\bin\java.exe" (
+  echo Using java from Oxygen install folder.
+  set JAVA_HOME=^!OXYGEN_HOME^!\jre
+) 
 
 if not exist "%JAVA_HOME%\bin\java.exe" ( 
-  echo Cannot find the Java executable. 
-  echo Tried: %JAVA_HOME%\bin\java.exe
-  echo Please configure correctly the JAVA_HOME in the 'config.cmd' file.
-  goto :end
+    echo Cannot find the Java executable. 
+    echo Tried with the JAVA_HOME: %JAVA_HOME%
+    echo Please configure correctly the JAVA_HOME system environment.
+    goto :end
 )
-
 
 echo Make sure the Oxygen application is closed before proceeding.
 set /p MSG= Hit ENTER when ready...
