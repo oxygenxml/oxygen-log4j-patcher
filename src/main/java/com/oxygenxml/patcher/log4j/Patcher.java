@@ -124,13 +124,7 @@ public class Patcher {
         ));
     
     
-    thirdPartyReplacementMap.put(Pattern.compile("<version>2.14.0</version>(.*?)<project-info>(.*?)<about>Apache log4j"), new Change(
-        "<version>" + newLog4jVersion + "</version>\n"
-            + "<project-info>\n"
-            + "<about>Apache log4j",
-        null
-    ));
-    thirdPartyReplacementMap.put(Pattern.compile("<version>2.13.0</version>(.*?)<project-info>(.*?)<about>Apache log4j"), new Change(
+    thirdPartyReplacementMap.put(Pattern.compile("<version>(.*?)</version>([\\r\\n\\s]*)<project-info>([\\r\\n\\s]*)<about>Apache (l|L)og4j"), new Change(
         "<version>" + newLog4jVersion + "</version>\n"
             + "<project-info>\n"
             + "<about>Apache log4j",
@@ -152,9 +146,11 @@ public class Patcher {
     		installFolder = args[0];
     	} else {
     		System.out.println("No OXYGEN_HOME specififed.");
-    	}
-    	
+    		System.exit(0);
+    	}    	
     }
+    installFolder = installFolder.trim();
+    
     String newLog4jVersion = NEW_LOG4J_VERSION;
     if (args.length > 1) {
       newLog4jVersion = args[1];
@@ -266,6 +262,7 @@ public class Patcher {
     
     if (file.getName().endsWith("third-party-components.xml")) {
       newContent = applyPatterns(thirdPartyReplacementMap, newContent);
+      
     }
     
     if (!newContent.equals(content)) {
@@ -280,7 +277,7 @@ public class Patcher {
   private String applyPatterns(HashMap<Pattern, Change> patterns, String newContent) {
     Set<Pattern> keySet = patterns.keySet();
     for (Pattern pattern : keySet) {
-      newContent = pattern.matcher(newContent).replaceAll(patterns.get(pattern).newName);
+      newContent = pattern.matcher(newContent).replaceAll(patterns.get(pattern).getNewName());
     }
     return newContent;
   }
@@ -297,7 +294,7 @@ public class Patcher {
     Set<Pattern> keySet = fileAndContentReplacementMap.keySet();
     for (Pattern pattern : keySet) {
       if (pattern.matcher(toReplace.getName()).matches()) {
-        File copySource = new File(fileAndContentReplacementMap.get(pattern).pathToReplacement);
+        File copySource = new File(fileAndContentReplacementMap.get(pattern).getPathToReplacement());
         File copyTarget = new File(toReplace.getParentFile(), copySource.getName());
 
         if (copyTarget.equals(toReplace)) {
