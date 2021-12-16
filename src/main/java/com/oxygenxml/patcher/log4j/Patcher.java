@@ -124,12 +124,16 @@ public class Patcher {
         ));
     
     
-    thirdPartyReplacementMap.put(Pattern.compile("<version>2.14.0</version>"), new Change(
-        "<version>" + newLog4jVersion + "</version>",
+    thirdPartyReplacementMap.put(Pattern.compile("<version>2.14.0</version>(.*?)<project-info>(.*?)<about>Apache log4j"), new Change(
+        "<version>" + newLog4jVersion + "</version>\n"
+            + "<project-info>\n"
+            + "<about>Apache log4j",
         null
     ));
-    thirdPartyReplacementMap.put(Pattern.compile("<version>2.13.0</version>"), new Change(
-        "<version>" + newLog4jVersion + "</version>",
+    thirdPartyReplacementMap.put(Pattern.compile("<version>2.13.0</version>(.*?)<project-info>(.*?)<about>Apache log4j"), new Change(
+        "<version>" + newLog4jVersion + "</version>\n"
+            + "<project-info>\n"
+            + "<about>Apache log4j",
         null
     ));
   }
