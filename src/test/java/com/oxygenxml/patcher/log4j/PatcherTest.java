@@ -25,7 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class PatcherTest {
-  private Path rootPath = Paths.get("test");
+  private static final String THIRD_PARTY_COMPONENTS_XML = "third-party-components.xml";
+  private Path                rootPath                   = Paths.get("test");
 
   @Before
   public void setUp() throws IOException {
@@ -52,9 +53,11 @@ public class PatcherTest {
           touch(f, "log4j-api-2.14.0.jar");
           touch(f, "log4j-1.2-api-2.14.0.jar");
 
-          for (String ext : Patcher.FILES_WITH_REFS_EXTENSIONS) {
+          for (String ext : Patcher.EXTENSIONS_OF_FILES_WITH_REFERENCES) {
             touch(f, "some" + ext, "Library references log4j-core-2.14.0.jar;log4j-api-2.14.0.jar;log4j-1.2-api-2.14.0.jar");
           }
+
+          touch(f, THIRD_PARTY_COMPONENTS_XML, "<version>2.13.0</version>");
 
         } catch (IOException e) {
           fail(e.getMessage());
@@ -75,16 +78,19 @@ public class PatcherTest {
           assertTrue(new File(f, "log4j-api-2.16.0.jar").exists());
           assertTrue(new File(f, "log4j-1.2-api-2.16.0.jar").exists());
         } else {
-          if (Patcher.canContainLog4jReferences(f.getName())) {
-            try {
-              byte[] bytes;
-              bytes = Files.readAllBytes(f.toPath());
-              String content = new String(bytes, StandardCharsets.UTF_8);
+          try {
+            if (Patcher.canContainLog4jReferences(f.getName()) && !f.getName().equals(THIRD_PARTY_COMPONENTS_XML)) {
+              String content = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
               assertEquals("Library references log4j-core-2.16.0.jar;log4j-api-2.16.0.jar;log4j-1.2-api-2.16.0.jar", content);
-            } catch (IOException e) {
-              fail(e.getMessage());
             }
+            if (f.getName().equals(THIRD_PARTY_COMPONENTS_XML)) {
+              String content = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
+              assertEquals("<version>2.16.0</version>", content);
+            }
+          } catch (IOException e) {
+            fail(e.getMessage());
           }
+
         }
       });
     }
@@ -104,9 +110,8 @@ public class PatcherTest {
   public void testPatcher() throws IOException {
     Patcher patcher = new Patcher(rootPath.toFile(), Patcher.NEW_LOG4J_VERSION);
     patcher.scanAndReplaceFiles();
-    System.out.println("Calling multiple times.");
     patcher.scanAndReplaceFiles();
-
+    patcher.scanAndReplaceFiles();
     checkTestDir();
 
   }
