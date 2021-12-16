@@ -34,8 +34,10 @@ public class PatcherTest {
   }
 
   private void deleteTestDir() throws IOException {
-    try (Stream<Path> walk = Files.walk(rootPath)) {
-      walk.sorted(Comparator.reverseOrder()).map(Path::toFile).peek(System.out::println).forEach(File::delete);
+    if (rootPath.toFile().exists()) {
+      try (Stream<Path> walk = Files.walk(rootPath)) {
+        walk.sorted(Comparator.reverseOrder()).map(Path::toFile).peek(System.out::println).forEach(File::delete);
+      }
     }
   }
 
@@ -100,8 +102,11 @@ public class PatcherTest {
 
   @Test
   public void testPatcher() throws IOException {
-    Patcher patcher = new Patcher(rootPath.toFile());
+    Patcher patcher = new Patcher(rootPath.toFile(), Patcher.NEW_LOG4J_VERSION);
     patcher.scanAndReplaceFiles();
+    System.out.println("Calling multiple times.");
+    patcher.scanAndReplaceFiles();
+
     checkTestDir();
 
   }
