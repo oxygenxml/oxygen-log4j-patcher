@@ -19,6 +19,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.junit.Before;
@@ -37,7 +39,20 @@ public class PatcherTest {
   private void deleteTestDir() throws IOException {
     if (rootPath.toFile().exists()) {
       try (Stream<Path> walk = Files.walk(rootPath)) {
-        walk.sorted(Comparator.reverseOrder()).map(Path::toFile).peek(System.out::println).forEach(File::delete);
+        walk.sorted(new Comparator<Path>() {
+          @Override
+          public int compare(Path o1, Path o2) {
+            return -o1.compareTo(o2);
+          }
+        }).map(new Function<Path, File>() {
+          public File apply(Path t) {
+            return t.toFile();
+          };
+        }).forEach(new Consumer<File>() {
+          public void accept(File f) {
+            f.delete();
+          }
+        });
       }
     }
   }
@@ -46,21 +61,38 @@ public class PatcherTest {
     new File("test/lib1/lib2/lib3/lib4").mkdirs();
 
     try (Stream<Path> walk = Files.walk(rootPath)) {
-      walk.sorted(Comparator.naturalOrder()).map(Path::toFile).peek(System.out::println).forEach((f) -> {
-        try {
-          System.out.println("Creating log4j target files in folder: " + f);
-          touch(f, "log4j-core-2.14.0.jar");
-          touch(f, "log4j-api-2.14.0.jar");
-          touch(f, "log4j-1.2-api-2.14.0.jar");
+      walk.sorted(new Comparator<Path>() {
+        @Override
+        public int compare(Path o1, Path o2) {
+          return o1.compareTo(o2);
+        }
+      }).map(new Function<Path, File>() {
+        public File apply(Path t) {
+          return t.toFile();
+        };
+      }).forEach(new Consumer<File>() {
+        public void accept(File f) {
+          try {
+            System.out.println("Creating log4j target files in folder: " + f);
+            touch(f, "log4j-core-2.14.0.jar");
+            touch(f, "log4j-api-2.14.0.jar");
+            touch(f, "log4j-1.2-api-2.14.0.jar");
 
-          for (String ext : Patcher.EXTENSIONS_OF_FILES_WITH_REFERENCES) {
-            touch(f, "some" + ext, "Library references log4j-core-2.14.0.jar;log4j-api-2.14.0.jar;log4j-1.2-api-2.14.0.jar");
+            for (String ext : Patcher.EXTENSIONS_OF_FILES_WITH_REFERENCES) {
+              touch(f, "some" + ext, "Library references log4j-core-2.14.0.jar;log4j-api-2.14.0.jar;log4j-1.2-api-2.14.0.jar");
+            }
+
+            touch(f, THIRD_PARTY_COMPONENTS_XML, ""
+                + "  <version>x.y.z</version>\n\n"
+                + "  <project-info>\n\n"
+                + "    <about>Something else...\n"
+                + "  <version>2.13.0</version>\n\n"
+                + "  <project-info>\n\n"
+                + "    <about>Apache Log4j");
+
+          } catch (IOException e) {
+            fail(e.getMessage());
           }
-
-          touch(f, THIRD_PARTY_COMPONENTS_XML, "<version>2.13.0</version>");
-
-        } catch (IOException e) {
-          fail(e.getMessage());
         }
       });
     }
@@ -68,29 +100,44 @@ public class PatcherTest {
 
   private void checkTestDir() throws IOException {
     try (Stream<Path> walk = Files.walk(rootPath)) {
-      walk.sorted(Comparator.naturalOrder()).map(Path::toFile).peek(System.out::println).forEach((f) -> {
-        System.out.println("Checking: " + f);
-        if (f.isDirectory()) {
-          assertFalse(new File(f, "log4j-core-2.14.0.jar").exists());
-          assertFalse(new File(f, "log4j-api-2.14.0.jar").exists());
-          assertFalse(new File(f, "log4j-1.2-api-2.14.0.jar").exists());
-          assertTrue(new File(f, "log4j-core-2.16.0.jar").exists());
-          assertTrue(new File(f, "log4j-api-2.16.0.jar").exists());
-          assertTrue(new File(f, "log4j-1.2-api-2.16.0.jar").exists());
-        } else {
-          try {
-            if (Patcher.canContainLog4jReferences(f.getName()) && !f.getName().equals(THIRD_PARTY_COMPONENTS_XML)) {
-              String content = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
-              assertEquals("Library references log4j-core-2.16.0.jar;log4j-api-2.16.0.jar;log4j-1.2-api-2.16.0.jar", content);
-            }
-            if (f.getName().equals(THIRD_PARTY_COMPONENTS_XML)) {
-              String content = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
-              assertEquals("<version>2.16.0</version>", content);
-            }
-          } catch (IOException e) {
-            fail(e.getMessage());
-          }
+      walk.sorted().map(new Function<Path, File>() {
+        public File apply(Path t) {
+          return t.toFile();
+        };
+      }).forEach(new Consumer<File>() {
+        public void accept(File f) {
 
+          System.out.println("Checking: " + f);
+          if (f.isDirectory()) {
+            assertFalse(new File(f, "log4j-core-2.14.0.jar").exists());
+            assertFalse(new File(f, "log4j-api-2.14.0.jar").exists());
+            assertFalse(new File(f, "log4j-1.2-api-2.14.0.jar").exists());
+            assertTrue(new File(f, "log4j-core-2.16.0.jar").exists());
+            assertTrue(new File(f, "log4j-api-2.16.0.jar").exists());
+            assertTrue(new File(f, "log4j-1.2-api-2.16.0.jar").exists());
+          } else {
+            try {
+              if (Patcher.canContainLog4jReferences(f.getName()) && !f.getName().equals(THIRD_PARTY_COMPONENTS_XML)) {
+                String content = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
+                assertEquals("Library references log4j-core-2.16.0.jar;log4j-api-2.16.0.jar;log4j-1.2-api-2.16.0.jar", content);
+              }
+              if (f.getName().equals(THIRD_PARTY_COMPONENTS_XML)) {
+                String content = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
+                assertEquals(
+                    "  <version>x.y.z</version>\n" + 
+                    "\n" + 
+                    "  <project-info>\n" + 
+                    "\n" + 
+                    "    <about>Something else...\n" + 
+                    "  <version>2.16.0</version>\n" + 
+                    "<project-info>\n" + 
+                    "<about>Apache log4j", content);
+              }
+            } catch (IOException e) {
+              fail(e.getMessage());
+            }
+
+          }
         }
       });
     }
