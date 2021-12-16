@@ -15,6 +15,8 @@ if not exist "%OXYGEN_HOME%" (
 )
 
 
+set JAVA_HOME=^!OXYGEN_HOME^!\jre
+
 if not exist "%JAVA_HOME%\bin\java.exe" ( 
   echo Cannot find the Java executable. 
   echo Tried: %JAVA_HOME%\bin\java.exe
@@ -22,16 +24,9 @@ if not exist "%JAVA_HOME%\bin\java.exe" (
   goto :end
 )
 
-if not exist "%ANT_HOME%\bin\ant.cmd" ( 
-  echo Cannot find the Ant executable. 
-  echo Tried: %ANT_HOME%\bin\java.exe
-  echo Please configure correctly the ANT_HOME in the 'config.cmd' file.
-  goto :end
-)
-
 echo Configuration ok.
 
-^!ANT_HOME^!\bin\ant.bat -Doxygen.home="^!OXYGEN_HOME^!"
+"%JAVA_HOME%\bin\java.exe" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "%OXYGEN_HOME%"
 
 :end
 echo Leaving..
