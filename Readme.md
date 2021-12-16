@@ -1,28 +1,33 @@
 # Oxygen Patch Tool for Log4j 
-A tool that updates the log4j library to version 2.16 in an Oxygen installation.
+This is a tool that updates the log4j library to version 2.16 in an Oxygen standalone installation. 
+The recommended Oxygen versions are from 16.1 to 22.1 inclusive.
+For the newer versions, like 23.1 or 24.0 there are already available kits on the Oxygen website: https://www.oxygenxml.com/software_archive.html so there is no need to apply this tool.
 
-## Download from
+This tool works only for the Oxygen XML Editor, Author and Developer. It will not work for Web Author, Content Fusion, or the Eclipse plugins.
+
+## Download 
+You can download the tool directly from GitHub, using this link.
 https://github.com/oxygenxml/oxygen-log4j-patcher/archive/refs/heads/main.zip
 
-Unzip it to a directory of your choice.  
+Unzip it to a directory of your choice. Keep track of the directory where you have unzipped the file.
 
 ## How to apply it
 
-###On Windows:
+### On Windows:
 
  1. Make sure the Oxygen application is closed.
- 1. Start a terminal with administrative privileges. For this press the "Start" button, type "cmd", then choose "Run as administrator".
- 1. Change directory to the directory of the 'patch.bat' file.
+ 1. Start a terminal with administrative privileges. For this press the "Start" button, type "cmd", then choose "Run as administrator" from the  menu.
+ 1. Change directory to the directory of the 'patch.bat' file. ('cd /Users/user/Downloads/oxygen-log4j-patcher')
  1. Type 'patch.bat' in the command terminal and press ENTER.
  1. Follow the instructions given by the script. 
    
-###On Mac:
+### On Mac:
  1. Make sure you run as an user with administrator privileges.
  1. Change directory to the directory of the 'patch.sh' file. ('cd /Users/user/Downloads/oxygen-log4j-patcher' for instance ) 
  1. Type 'sh patch.sh' in the terminal and press ENTER.
  1. Follow the instructions given by the script.
     
-###On Linux:
+### On Linux:
  1. If the Oxygen application has been installed as a superuser, then type in a terminal: "sudo -s" in order to open a terminal with enough rights.
  1. Change directory to the directory of the 'patch.sh' file. ('cd /home/user/downloads/oxygen-log4j-patcher' for instance )
  1. Type 'sh patch.sh' in the terminal and press ENTER.
