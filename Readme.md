@@ -3,6 +3,7 @@ A tool that updates the log4j library to version 2.16 in an Oxygen installation.
 
 ## Download from
 https://github.com/oxygenxml/oxygen-log4j-patcher/archive/refs/heads/main.zip
+
 Unzip it to a directory of your choice.  
 
 ## How to apply it
