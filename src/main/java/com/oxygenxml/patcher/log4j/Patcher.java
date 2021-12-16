@@ -74,7 +74,15 @@ public class Patcher {
    * @throws IOException
    */
   public static void main(String[] args) throws IOException {
-    String installFolder = args[0];
+    String installFolder = System.getenv("OXYGEN_HOME"); 
+    if (installFolder == null) {		
+    	if (args.length > 0) {
+    		installFolder = args[0];
+    	} else {
+    		System.out.println("No OXYGEN_HOME specififed.");
+    	}
+    	
+    }
     String newLog4jVersion = NEW_LOG4J_VERSION;
     if (args.length > 1) {
       newLog4jVersion = args[1];
