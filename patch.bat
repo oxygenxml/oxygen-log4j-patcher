@@ -23,7 +23,7 @@ echo use one of the
 echo   - com.oxygenxml.editor
 echo   - com.oxygenxml.author
 echo   - com.oxygenxml.developer
-echo  subfolders from the Eclipse 'dropins' folder .
+echo  subfolders from the Eclipse 'dropins' folder.
 echo  Example: D:\eclipse-test\dropins\com.oxygenxml.editor_...
 echo.
 

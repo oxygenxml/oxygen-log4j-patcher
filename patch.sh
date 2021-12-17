@@ -25,7 +25,7 @@ echo use one of the
 echo   - com.oxygenxml.editor
 echo   - com.oxygenxml.author
 echo   - com.oxygenxml.developer
-echo  subfolders from the Eclipse 'dropins' folder .
+echo  subfolders from the Eclipse 'dropins' folder.
 echo
 echo  Example, on Linux: /home/user/eclipse/dropins/com.oxygenxml.editor_...
 echo  Example, on Mac: /Users/user/Eclipse.app/Contents/Eclipse/dropins/com.oxygenxml.editor...
