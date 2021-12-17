@@ -10,11 +10,23 @@ export OXYGEN_HOME=$LINE
 
 DETECTED_OXYGEN=0
 
-if [ -f "${OXYGEN_HOME}/oxygen.sh" ] || \
-   [ -f "${OXYGEN_HOME}/oxygenAuthor.sh" ] || \   
-   [ -f "${OXYGEN_HOME}/oxygenChemistry.sh" ] || \   
-   [ -f "${OXYGEN_HOME}/chemistry.sh" ] || \   
-   [ -f "${OXYGEN_HOME}/oxygenDeveloper.sh" ];
+if [ -f "${OXYGEN_HOME}/oxygen.sh" ] 
+then
+ DETECTED_OXYGEN=1
+fi 
+if [ -f "${OXYGEN_HOME}/oxygenAuthor.sh" ] 
+then
+ DETECTED_OXYGEN=1
+fi 
+if [ -f "${OXYGEN_HOME}/oxygenDeveloper.sh" ] 
+then
+ DETECTED_OXYGEN=1
+fi 
+if [ -f "${OXYGEN_HOME}/oxygenChemistry.sh" ] 
+then
+ DETECTED_OXYGEN=1
+fi 
+if [ -f "${OXYGEN_HOME}/chemistry.sh" ] 
 then
  DETECTED_OXYGEN=1
 fi 
