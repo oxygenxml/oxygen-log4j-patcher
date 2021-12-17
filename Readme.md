@@ -1,4 +1,4 @@
-# Oxygen Patch Tool for Log4j 
+# Oxygen XML Patch Tool for Apache Log4j vulnerability CVE-2021-44228
 This is a tool that updates the log4j library to version 2.16 in an:
  - Oxygen standalone installation, or
  - Oxygen plugin for Eclipse installation
