@@ -17,7 +17,7 @@ Unzip it to a directory of your choice. Keep track of the directory where you ha
 
  1. Make sure the Oxygen application is closed.
  1. Start a terminal with administrative privileges. For this press the "Start" button, type "cmd", then choose "Run as administrator" from the  menu.
- 1. Change directory to the directory of the 'patch.bat' file. ('cd /Users/user/Downloads/oxygen-log4j-patcher')
+ 1. Change directory to the directory of the 'patch.bat' file. ('cd c:\user_home\Downloads\oxygen-log4j-patcher')
  1. Type 'patch.bat' in the command terminal and press ENTER.
  1. Follow the instructions given by the script. 
    
