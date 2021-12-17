@@ -7,7 +7,16 @@ echo Enter path:
 read LINE </dev/tty
 export OXYGEN_HOME=$LINE
 
-if [ ! -f "$OXYGEN_HOME/oxygen.sh" ]; then
+
+DETECTED_OXYGEN=0
+if [ ! -f "$OXYGEN_HOME/oxygen.sh" ] || \
+   [ ! -f "$OXYGEN_HOME/oxygenAuthor.sh" ] || \
+   [ ! -f "$OXYGEN_HOME/oxygenChemistry.sh" ] || \   
+   [ ! -f "$OXYGEN_HOME/oxygenDeveloper.sh" ] then  
+ DETECTED_OXYGEN=1
+fi 
+
+if [ "$DETECTED_OXYGEN"=1 ]; then
   echo This is not an Oxygen Install dir: $OXYGEN_HOME
   exit -1
 fi

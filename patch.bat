@@ -1,4 +1,4 @@
-@echo off
+rem @echo off
 echo This script upgrades the log4j library to version 2.16 in an Oxygen XML standalone application.
 
 echo Please enter the full path to the Oxygen installation folder.
@@ -8,7 +8,13 @@ echo For example: C:\Program Files\Oxygen XML Editor 22
 
 set /p OXYGEN_HOME=Enter path:  
 
-if not exist "%OXYGEN_HOME%\oxygen.bat" (
+set DETECTED_OXYGEN=0
+if exist "%OXYGEN_HOME%\oxygen.bat" set DETECTED_OXYGEN=1 
+if exist "%OXYGEN_HOME%\oxygenChemistry.bat" set DETECTED_OXYGEN=1 
+if exist "%OXYGEN_HOME%\oxygenAuthor.bat" set DETECTED_OXYGEN=1 
+if exist "%OXYGEN_HOME%\oxygenDeveloper.bat" set DETECTED_OXYGEN=1 
+
+if not %DETECTED_OXYGEN%==1 (
   echo This is not an Oxygen Install dir: %OXYGEN_HOME% 
   goto :end
 )
