@@ -145,8 +145,8 @@ public class Patcher {
     	if (args.length > 0) {
     		installFolder = args[0];
     	} else {
-    		System.out.println("No OXYGEN_HOME specififed.");
-    		System.exit(0);
+    		System.out.println("No OXYGEN_HOME specified.");
+    		System.exit(-1);
     	}    	
     }
     installFolder = installFolder.trim();
