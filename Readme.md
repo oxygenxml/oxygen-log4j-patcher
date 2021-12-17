@@ -1,6 +1,8 @@
 # Oxygen Patch Tool for Log4j 
 This is a tool that updates the log4j library to version 2.16 in an Oxygen standalone installation. 
+
 The recommended Oxygen versions to apply this tool on range from 16.1 to 22.1 inclusive.
+
 For the newer Oxygen versions, like 23.1 or 24.0 there are already available kits on the Oxygen website that contain the updated log4j library, at https://www.oxygenxml.com/software_archive.html and https://www.oxygenxml.com/download.html respectively, so there is no need to apply this tool, just get use the latest installation kits to update Oxygen.
 
 This tool works only for the Oxygen XML Editor, Author and Developer. It will not work for Web Author, Content Fusion, or the Eclipse plugins. For these please see the security advisory at https://www.oxygenxml.com/security/advisory/CVE-2021-44228.html to determine the appropriate action.
