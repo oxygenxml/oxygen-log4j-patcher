@@ -108,6 +108,11 @@ public class Patcher {
         "lib/log4j-1.2-api-" + newLog4jVersion + ".jar"
         ));
     
+    fileAndContentReplacementMap.put(Pattern.compile("log4j-slf4j-impl-(.*?).jar"), new Change(
+        "log4j-slf4j-impl-" + newLog4jVersion + ".jar",
+        "lib/log4j-slf4j-impl-" + newLog4jVersion + ".jar"
+        ));
+
     fileAndContentReplacementMap.put(Pattern.compile("calabash-log4j-core-(.*?).jar"), new Change(
         "calabash-log4j-core-" + newLog4jVersion + ".jar",  
         "lib/log4j-core-" + newLog4jVersion + ".jar"
