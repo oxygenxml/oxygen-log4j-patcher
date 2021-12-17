@@ -1,21 +1,30 @@
-rem @echo off
-echo This script upgrades the log4j library to version 2.16 in an Oxygen XML standalone application.
-
+@echo off
+echo This script upgrades the log4j library to version 2.16 in an Oxygen XML application.
+echo It works for Oxygen standalone distributions and Eclipse plugin distributions.
+echo.
 echo Please enter the full path to the Oxygen installation folder.
-echo You can locate the installation folder by right-clicking the Oxygen application shortcut 
-echo and choosing "Properties" from the menu. Use the path from the "Start in" field.
-echo For example: C:\Program Files\Oxygen XML Editor 22
+echo.
+echo For the Oxygen standalone installations:
+echo  You can locate this folder by right-clicking the Oxygen application shortcut 
+echo  and choosing "Properties" from the menu. Use the path from the "Start in" field.
+echo  Example: C:\Program Files\Oxygen XML Editor 22
+echo.  
+echo For the Oxygen plugin for Eclipse installatons:
+echo  Use the com.oxygenxml subfolder from the eclipse 'plugins' folder if you 
+echo  installed it using an Update Site method. 
+echo  Example: D:\eclipse-test\plugins\com.oxygenxml.editor_...
+echo.  
+echo  Use the com.oxygenxml subfolder from the eclipse 'dropins' folder if you 
+echo  installed it using an Update Site method.
+echo  Example: D:\eclipse-test\dropins\com.oxygenxml.editor_...
+echo.
 
 set /p OXYGEN_HOME=Enter path:  
 
-set DETECTED_OXYGEN=0
-if exist "%OXYGEN_HOME%\oxygen.bat" set DETECTED_OXYGEN=1 
-if exist "%OXYGEN_HOME%\oxygenChemistry.bat" set DETECTED_OXYGEN=1 
-if exist "%OXYGEN_HOME%\oxygenAuthor.bat" set DETECTED_OXYGEN=1 
-if exist "%OXYGEN_HOME%\oxygenDeveloper.bat" set DETECTED_OXYGEN=1 
-
-if not %DETECTED_OXYGEN%==1 (
-  echo This is not an Oxygen Install dir: %OXYGEN_HOME% 
+echo Please confirm that you want to apply the patch over the folder:
+echo %OXYGEN_HOME%
+set /p CONFIRM=(yes/no)
+if not "%CONFIRM%"=="yes" (
   goto :end
 )
 
