@@ -10,16 +10,29 @@ echo  and choosing "Properties" from the menu. Use the path from the "Start in" 
 echo  Example: C:\Program Files\Oxygen XML Editor 22
 echo.  
 echo For the Oxygen plugin for Eclipse installatons:
-echo  Use the com.oxygenxml subfolder from the eclipse 'plugins' folder if you 
-echo  installed it using an Update Site method. 
+echo If you installed it using an Update Site method: 
+echo use one of the 
+echo   - com.oxygenxml.editor
+echo   - com.oxygenxml.author
+echo   - com.oxygenxml.developer
+echo  subfolders from the Eclipse 'plugins' folder. 
 echo  Example: D:\eclipse-test\plugins\com.oxygenxml.editor_...
 echo.  
-echo  Use the com.oxygenxml subfolder from the eclipse 'dropins' folder if you 
-echo  installed it using an Update Site method.
+echo If you installed using a dropins method 
+echo use one of the 
+echo   - com.oxygenxml.editor
+echo   - com.oxygenxml.author
+echo   - com.oxygenxml.developer
+echo  subfolders from the Eclipse 'dropins' folder .
 echo  Example: D:\eclipse-test\dropins\com.oxygenxml.editor_...
 echo.
 
 set /p OXYGEN_HOME=Enter path:  
+
+if not exist "%OXYGEN_HOME%" (
+  echo The folder does not exist: %OXYGEN_HOME%
+  goto :end
+) 
 
 echo Please confirm that you want to apply the patch over the folder:
 echo %OXYGEN_HOME%
@@ -27,6 +40,7 @@ set /p CONFIRM=(yes/no)
 if not "%CONFIRM%"=="yes" (
   goto :end
 )
+
 
 if exist "%OXYGEN_HOME%\jre\bin\java.exe" (
   echo Using java from Oxygen install folder.

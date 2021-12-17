@@ -1,40 +1,54 @@
 #!/bin/sh
-echo This script upgrades the log4j library to version 2.16 in an Oxygen XML standalone application.
 
+echo This script upgrades the log4j library to version 2.16 in an Oxygen XML application.
+echo It works for Oxygen standalone distributions and Eclipse plugin distributions.
+echo 
 echo Please enter the full path to the Oxygen installation folder.
-echo For example, on Mac: /Applications/Oxygen XML Editor
+echo
+echo For the Oxygen standalone installations:
+echo  Example, on Linux: /home/user/Oxygen XML Editor
+echo  Example, on Mac: /Applications/Oxygen XML Editor
+echo   
+echo For the Oxygen plugin for Eclipse installatons:
+echo If you installed it using an Update Site method: 
+echo use one of the 
+echo   - com.oxygenxml.editor
+echo   - com.oxygenxml.author
+echo   - com.oxygenxml.developer
+echo  subfolders from the Eclipse 'plugins' folder. 
+echo   
+echo  Example, on Linux: /home/user/eclipse/plugins/com.oxygenxml.editor_...
+echo  Example, on Mac: /Users/user/Eclipse.app/Contents/Eclipse/plugins/com.oxygenxml.editor...
+echo  
+echo If you installed using a dropins method 
+echo use one of the 
+echo   - com.oxygenxml.editor
+echo   - com.oxygenxml.author
+echo   - com.oxygenxml.developer
+echo  subfolders from the Eclipse 'dropins' folder .
+echo
+echo  Example, on Linux: /home/user/eclipse/dropins/com.oxygenxml.editor_...
+echo  Example, on Mac: /Users/user/Eclipse.app/Contents/Eclipse/dropins/com.oxygenxml.editor...
+echo 
 echo Enter path:
 read LINE </dev/tty
 export OXYGEN_HOME=$LINE
 
-
-DETECTED_OXYGEN=0
-
-if [ -f "${OXYGEN_HOME}/oxygen.sh" ] 
+if [ ! -d "${OXYGEN_HOME}" ]
 then
- DETECTED_OXYGEN=1
-fi 
-if [ -f "${OXYGEN_HOME}/oxygenAuthor.sh" ] 
-then
- DETECTED_OXYGEN=1
-fi 
-if [ -f "${OXYGEN_HOME}/oxygenDeveloper.sh" ] 
-then
- DETECTED_OXYGEN=1
-fi 
-if [ -f "${OXYGEN_HOME}/oxygenChemistry.sh" ] 
-then
- DETECTED_OXYGEN=1
-fi 
-if [ -f "${OXYGEN_HOME}/chemistry.sh" ] 
-then
- DETECTED_OXYGEN=1
-fi 
-
-if [ ! $DETECTED_OXYGEN == 1 ]; 
-then
-  echo This is not an Oxygen Install dir: $OXYGEN_HOME
+  echo The folder does not exist: $OXYGEN_HOME
   exit -1
+fi
+
+echo Please confirm that you want to apply the patch over the folder:
+echo $OXYGEN_HOME
+echo Type 'yes' or 'no':
+
+read CONFIRM </dev/tty
+
+if [ ! "$CONFIRM" == "yes" ]
+then
+ exit -1
 fi
 
 
