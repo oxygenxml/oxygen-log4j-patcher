@@ -5,28 +5,26 @@ echo It works for Oxygen standalone distributions and Eclipse plugin distributio
 echo 
 echo Please enter the full path to the Oxygen installation folder.
 echo
-echo For the Oxygen standalone installations:
-echo  Example, on Linux: /home/user/Oxygen XML Editor
-echo  Example, on Mac: /Applications/Oxygen XML Editor
+echo For the Oxygen Standalone installations:
+echo  Example, linux: /home/user/Oxygen XML Editor
+echo  Example, mac:   /Applications/Oxygen XML Editor
 echo   
-echo For the Oxygen plugin for Eclipse installatons:
-echo If you installed it using an Update Site method: 
-echo use one of the 
+echo For the Oxygen Plugin for Eclipse installatons:
+echo If you installed it using an Update Site method use one of the: 
 echo   - com.oxygenxml.editor
 echo   - com.oxygenxml.author
 echo   - com.oxygenxml.developer
 echo  subfolders from the Eclipse 'plugins' folder. 
-echo  Example, on Linux: /home/user/eclipse/plugins/com.oxygenxml.editor_...
-echo  Example, on Mac: /Users/user/Eclipse.app/Contents/Eclipse/plugins/com.oxygenxml.editor...
+echo  Example, linux: /home/user/eclipse/plugins/com.oxygenxml.editor_...
+echo  Example, mac:   /Users/user/Eclipse.app/Contents/Eclipse/plugins/com.oxygenxml.editor...
 echo  
-echo If you installed using a dropins method 
-echo use one of the 
+echo If you installed using a dropins method use one of the 
 echo   - com.oxygenxml.editor
 echo   - com.oxygenxml.author
 echo   - com.oxygenxml.developer
 echo  subfolders from the Eclipse 'dropins' folder.
-echo  Example, on Linux: /home/user/eclipse/dropins/com.oxygenxml.editor_...
-echo  Example, on Mac: /Users/user/Eclipse.app/Contents/Eclipse/dropins/com.oxygenxml.editor...
+echo  Example, linux: /home/user/eclipse/dropins/com.oxygenxml.editor_...
+echo  Example, mac:   /Users/user/Eclipse.app/Contents/Eclipse/dropins/com.oxygenxml.editor...
 echo 
 echo Enter path:
 read LINE </dev/tty
@@ -57,12 +55,14 @@ if [ -f "${JAVA_HOME}/bin/java" ]
 then
   OXYGEN_JAVA="${JAVA_HOME}/bin/java"
 fi
-echo Using java executable: $OXYGEN_JAVA
 
+echo
+echo Using java executable: $OXYGEN_JAVA
+echo
 echo Please confirm that you want to apply the patch over the folder:
 echo $OXYGEN_HOME
+echo
 echo Type 'yes' or 'no':
-
 read CONFIRM </dev/tty
 
 if [ ! "$CONFIRM" == "yes" ]
@@ -70,13 +70,15 @@ then
  exit -1
 fi
 
+echo
 echo Please choose what type of patch do you want to apply:
+echo
 echo   Type 'u' - for upgrading the log4j library 
 echo   Type 'r' - for keeping the log4j library, but removing the vulnerable JNDI classes from it.
 read STRATEGY </dev/tty
-
+echo
 echo Make sure the Oxygen application is closed before proceeding.
-echo Hit ENTER when ready...
+echo Type ENTER when ready...
 read W </dev/tty
 
 "$OXYGEN_JAVA" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "$STRATEGY"
