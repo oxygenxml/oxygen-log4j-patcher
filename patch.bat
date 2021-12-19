@@ -41,9 +41,12 @@ if not "%CONFIRM%"=="yes" (
   goto :end
 )
 
+echo Please choose what type of patch do you want to apply:
+echo   Type 'u' - for upgrading the log4j library 
+echo   Type 'r' - for keeping the log4j library, but removing the vulnerable JNDI classes from it.
+set /p STRATEGY=Enter one of (u/r):
 
 if exist "%OXYGEN_HOME%\jre\bin\java.exe" (
-  echo Using java from Oxygen install folder.
   set JAVA_HOME=%OXYGEN_HOME%\jre
 ) 
 
@@ -55,11 +58,12 @@ if not exist "%JAVA_HOME%\bin\java.exe" (
 )
 echo Using java from: %JAVA_HOME%
 
-echo Make sure the Oxygen application is closed before proceeding.
-set /p MSG= Hit ENTER when ready...
 echo Configuration ok.
 
-"%JAVA_HOME%\bin\java.exe" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "%OXYGEN_HOME%"
+echo Make sure the Oxygen application is closed before proceeding.
+set /p MSG= Press ENTER when ready...
+
+"%JAVA_HOME%\bin\java.exe" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "%OXYGEN_HOME%" "%STRATEGY%"
 
 :end
 echo Leaving..

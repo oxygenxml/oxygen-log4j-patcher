@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PatcherTest {
+public class Log4jUpgdaderTest {
   private static final String THIRD_PARTY_COMPONENTS_XML = "third-party-components.xml";
   private Path                rootPath                   = Paths.get("test");
 
@@ -78,7 +78,7 @@ public class PatcherTest {
             touch(f, "log4j-api-2.14.0.jar");
             touch(f, "log4j-1.2-api-2.14.0.jar");
 
-            for (String ext : Patcher.EXTENSIONS_OF_FILES_WITH_REFERENCES) {
+            for (String ext : Log4jUpgrader.EXTENSIONS_OF_FILES_WITH_REFERENCES) {
               touch(f, "some" + ext, "Library references log4j-core-2.14.0.jar;log4j-api-2.14.0.jar;log4j-1.2-api-2.14.0.jar");
             }
 
@@ -117,7 +117,7 @@ public class PatcherTest {
             assertTrue(new File(f, "log4j-1.2-api-2.16.0.jar").exists());
           } else {
             try {
-              if (Patcher.canContainLog4jReferences(f.getName()) && !f.getName().equals(THIRD_PARTY_COMPONENTS_XML)) {
+              if (Log4jUpgrader.canContainLog4jReferencesInternal(f.getName()) && !f.getName().equals(THIRD_PARTY_COMPONENTS_XML)) {
                 String content = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
                 assertEquals("Library references log4j-core-2.16.0.jar;log4j-api-2.16.0.jar;log4j-1.2-api-2.16.0.jar", content);
               }
@@ -154,13 +154,11 @@ public class PatcherTest {
   }
 
   @Test
-  public void testPatcher() throws IOException {
-    Patcher patcher = new Patcher(rootPath.toFile(), Patcher.NEW_LOG4J_VERSION);
-    patcher.scanAndReplaceFiles();
-    patcher.scanAndReplaceFiles();
-    patcher.scanAndReplaceFiles();
+  public void testJndiRemover() throws IOException {
+    Patcher.main(new String[] {rootPath.toFile().getAbsolutePath(), "u"});
+    Patcher.main(new String[] {rootPath.toFile().getAbsolutePath(), "u"});
+    Patcher.main(new String[] {rootPath.toFile().getAbsolutePath(), "u"});
     checkTestDir();
-
   }
 
 }
