@@ -16,7 +16,6 @@ echo   - com.oxygenxml.editor
 echo   - com.oxygenxml.author
 echo   - com.oxygenxml.developer
 echo  subfolders from the Eclipse 'plugins' folder. 
-echo   
 echo  Example, on Linux: /home/user/eclipse/plugins/com.oxygenxml.editor_...
 echo  Example, on Mac: /Users/user/Eclipse.app/Contents/Eclipse/plugins/com.oxygenxml.editor...
 echo  
@@ -26,7 +25,6 @@ echo   - com.oxygenxml.editor
 echo   - com.oxygenxml.author
 echo   - com.oxygenxml.developer
 echo  subfolders from the Eclipse 'dropins' folder.
-echo
 echo  Example, on Linux: /home/user/eclipse/dropins/com.oxygenxml.editor_...
 echo  Example, on Mac: /Users/user/Eclipse.app/Contents/Eclipse/dropins/com.oxygenxml.editor...
 echo 
@@ -40,16 +38,6 @@ then
   exit -1
 fi
 
-echo Please confirm that you want to apply the patch over the folder:
-echo $OXYGEN_HOME
-echo Type 'yes' or 'no':
-
-read CONFIRM </dev/tty
-
-if [ ! "$CONFIRM" == "yes" ]
-then
- exit -1
-fi
 
 
 OXYGEN_JAVA=java
@@ -69,13 +57,27 @@ if [ -f "${JAVA_HOME}/bin/java" ]
 then
   OXYGEN_JAVA="${JAVA_HOME}/bin/java"
 fi
-
-
 echo Using java executable: $OXYGEN_JAVA
+
+echo Please confirm that you want to apply the patch over the folder:
+echo $OXYGEN_HOME
+echo Type 'yes' or 'no':
+
+read CONFIRM </dev/tty
+
+if [ ! "$CONFIRM" == "yes" ]
+then
+ exit -1
+fi
+
+echo Please choose what type of patch do you want to apply:
+echo   Type 'u' - for upgrading the log4j library 
+echo   Type 'r' - for keeping the log4j library, but removing the vulnerable JNDI classes from it.
+read STRATEGY </dev/tty
 
 echo Make sure the Oxygen application is closed before proceeding.
 echo Hit ENTER when ready...
 read W </dev/tty
 
-"$OXYGEN_JAVA" -cp target/classes com.oxygenxml.patcher.log4j.Patcher
+"$OXYGEN_JAVA" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "$STRATEGY"
 echo Leaving..
