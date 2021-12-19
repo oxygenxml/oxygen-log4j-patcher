@@ -45,8 +45,7 @@ public class Log4jJndiRemover extends Log4jSearcher {
   @Override
   protected int processLog4jFile(File file) throws IOException {
     int removed = 0;
-    System.out.println("Removing vulnerable entries from " + file);
-
+    
     File tmp = File.createTempFile("log4Patcher", ".jar");
 
     try (ZipInputStream zis = new ZipInputStream(new FileInputStream(file));
@@ -56,6 +55,7 @@ public class Log4jJndiRemover extends Log4jSearcher {
       byte[] buff = new byte[4096];
       while (entry != null) {
         if (entry.getName().endsWith("org/apache/logging/log4j/core/lookup/JndiLookup.class")) {
+          System.out.println("Removing JNDI class from " + file);
           // Do not copy it.
           while (zis.read(buff) != -1)
             ;
