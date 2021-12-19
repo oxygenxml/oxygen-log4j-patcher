@@ -34,6 +34,18 @@ if not exist "%OXYGEN_HOME%" (
   goto :end
 ) 
 
+if exist "%OXYGEN_HOME%\jre\bin\java.exe" (
+  set JAVA_HOME=%OXYGEN_HOME%\jre
+) 
+
+if not exist "%JAVA_HOME%\bin\java.exe" ( 
+    echo Cannot find the Java executable. 
+    echo Tried with the JAVA_HOME: %JAVA_HOME%
+    echo Please configure correctly the JAVA_HOME system environment.
+    goto :end
+)
+echo Using java from: %JAVA_HOME%
+
 echo Please confirm that you want to apply the patch over the folder:
 echo %OXYGEN_HOME%
 set /p CONFIRM=(yes/no)
@@ -46,17 +58,6 @@ echo   Type 'u' - for upgrading the log4j library
 echo   Type 'r' - for keeping the log4j library, but removing the vulnerable JNDI classes from it.
 set /p STRATEGY=Enter one of (u/r):
 
-if exist "%OXYGEN_HOME%\jre\bin\java.exe" (
-  set JAVA_HOME=%OXYGEN_HOME%\jre
-) 
-
-if not exist "%JAVA_HOME%\bin\java.exe" ( 
-    echo Cannot find the Java executable. 
-    echo Tried with the JAVA_HOME: %JAVA_HOME%
-    echo Please configure correctly the JAVA_HOME system environment.
-    goto :end
-)
-echo Using java from: %JAVA_HOME%
 
 echo Configuration ok.
 
