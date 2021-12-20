@@ -112,14 +112,16 @@ public class Log4jUpgdaderTest {
             assertFalse(new File(f, "log4j-core-2.14.0.jar").exists());
             assertFalse(new File(f, "log4j-api-2.14.0.jar").exists());
             assertFalse(new File(f, "log4j-1.2-api-2.14.0.jar").exists());
-            assertTrue(new File(f, "log4j-core-2.16.0.jar").exists());
-            assertTrue(new File(f, "log4j-api-2.16.0.jar").exists());
-            assertTrue(new File(f, "log4j-1.2-api-2.16.0.jar").exists());
+            assertTrue(new File(f, "log4j-core-" + Log4jUpgrader.NEW_LOG4J_VERSION + ".jar").exists());
+            assertTrue(new File(f, "log4j-api-" + Log4jUpgrader.NEW_LOG4J_VERSION + ".jar").exists());
+            assertTrue(new File(f, "log4j-1.2-api-" + Log4jUpgrader.NEW_LOG4J_VERSION + ".jar").exists());
           } else {
             try {
               if (Log4jUpgrader.canContainLog4jReferencesInternal(f.getName()) && !f.getName().equals(THIRD_PARTY_COMPONENTS_XML)) {
                 String content = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
-                assertEquals("Library references log4j-core-2.16.0.jar;log4j-api-2.16.0.jar;log4j-1.2-api-2.16.0.jar", content);
+                assertEquals("Library references log4j-core-" + Log4jUpgrader.NEW_LOG4J_VERSION + ".jar;" +
+                "log4j-api-" + Log4jUpgrader.NEW_LOG4J_VERSION + ".jar;" +
+                "log4j-1.2-api-" + Log4jUpgrader.NEW_LOG4J_VERSION + ".jar", content);
               }
               if (f.getName().equals(THIRD_PARTY_COMPONENTS_XML)) {
                 String content = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
@@ -129,7 +131,7 @@ public class Log4jUpgdaderTest {
                     "  <project-info>\n" + 
                     "\n" + 
                     "    <about>Something else...\n" + 
-                    "  <version>2.16.0</version>\n" + 
+                    "  <version>" + Log4jUpgrader.NEW_LOG4J_VERSION + "</version>\n" + 
                     "<project-info>\n" + 
                     "<about>Apache log4j", content);
               }

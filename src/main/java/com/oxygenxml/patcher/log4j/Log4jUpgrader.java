@@ -69,7 +69,7 @@ public class Log4jUpgrader extends Log4jSearcher {
   /**
    * The log4j version.
    */
-  protected static final String NEW_LOG4J_VERSION = "2.16.0";
+  protected static final String NEW_LOG4J_VERSION = "2.17.0";
 
   /**
    * Maps between a jar file name and its the new name, and the source that will
