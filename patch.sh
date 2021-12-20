@@ -30,8 +30,8 @@ echo For the Oxygen XML Web Author installations:
 echo   Hint: you may locate the installation directory by looking into Administration Page \(e.g.: https://www.[YOUR-WEB-AUTHOR-HOSTNAME]/oxygen-xml-web-author/app/admin.html\) at General section.
 echo  In case of "All Platforms" installation, the directory where the archive was extracted. It should contain the "tomcat" directory inside.
 echo  In case of "Web Application Archive" installation, the directory must be the root directory of your servlet container \(e.g. Tomcat\).
-echo  In case of "Linux" and "Windows" installations, the installation directory. It should contain the "tomcat" directory inside.
-echo  Example: D:\oxygen-xml-web-author
+echo  In case of "Linux" and "Mac" installations, the installation directory. It should contain the "tomcat" directory inside.
+echo  Example: /usr/local/oxygen-xml-web-author
 echo .
 echo Enter path:
 read LINE </dev/tty
