@@ -1,7 +1,8 @@
 # Oxygen XML Patch Tool for Apache Log4j vulnerability CVE-2021-44228
 This is a tool that updates the log4j version 2 library to version 2.16 in an:
  - Oxygen XML Editor/Author/Developer standalone installation, or
- - Oxygen XML Editor/Author/Developer plugin for Eclipse installation
+ - Oxygen XML Editor/Author/Developer plugin for Eclipse installation, or
+ - Oxygen XML Web Author for all installations
 
 The recommended Oxygen versions to apply this tool on range from 16.1 to 22.0 inclusive.
 
@@ -37,4 +38,7 @@ Unzip it to a directory of your choice. Keep track of the directory where you ha
  1. Change directory to the directory of the 'patch.sh' file. ('cd /home/user/downloads/oxygen-log4j-patcher' for instance )
  1. Type 'sh patch.sh' in the terminal and press ENTER.
  1. Follow the instructions given by the script.
-   
+
+
+### Limitations:
+ 1. For Oxygen XML Web Author, the patch won't affect custom data directory and custom DITA-OT directory if they are out of the installation directory.

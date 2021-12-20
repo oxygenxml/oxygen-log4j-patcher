@@ -26,6 +26,13 @@ echo   - com.oxygenxml.developer
 echo  subfolders from the Eclipse 'dropins' folder.
 echo  Example: D:\eclipse-test\dropins\com.oxygenxml.editor_...
 echo.
+echo For the Oxygen XML Web Author installations:
+echo   Hint: you may locate the installation directory by looking into Administration Page (e.g.: https://www.[YOUR-WEB-AUTHOR-HOSTNAME]/oxygen-xml-web-author/app/admin.html) at General section.
+echo  In case of "All Platforms" installation, the directory where the archive was extracted. It should contain the "tomcat" directory inside.
+echo  In case of "Web Application Archive" installation, the directory must be the root directory of your servlet container (e.g. Tomcat).
+echo  In case of "Linux" and "Windows" installations, the installation directory. It should contain the "tomcat" directory inside.
+echo  Example: D:\oxygen-xml-web-author
+echo .
 
 set /p OXYGEN_HOME=Enter path:  
 
@@ -61,7 +68,7 @@ set /p STRATEGY=Enter one of (u/r):
 
 echo Configuration ok.
 
-echo Make sure the Oxygen application is closed before proceeding.
+echo Make sure the Oxygen application or server is closed before proceeding.
 set /p MSG= Press ENTER when ready...
 
 "%JAVA_HOME%\bin\java.exe" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "%OXYGEN_HOME%" "%STRATEGY%"
