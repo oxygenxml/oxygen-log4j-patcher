@@ -55,7 +55,7 @@ if not "%CONFIRM%"=="yes" (
 
 echo Please choose what type of patch do you want to apply:
 echo   Type 'u' - for upgrading the log4j library 
-echo   Type 'r' - for keeping the log4j library, but removing the vulnerable JNDI classes from it.
+echo   Type 'r' - for keeping the current log4j library, but removing the vulnerable JNDI classes from it.
 set /p STRATEGY=Enter one of (u/r):
 
 
