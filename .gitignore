@@ -1,2 +1,4 @@
 test
-target/
+target/test-classes
+target/maven-status
+target/surefire-reports
