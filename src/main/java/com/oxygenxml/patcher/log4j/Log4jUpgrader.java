@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -102,21 +103,25 @@ public class Log4jUpgrader extends Log4jSearcher {
     this.newLog4jVersion = NEW_LOG4J_VERSION;
 
     // Match the log4j files, there are three jars.
-    fileAndContentReplacementMap.put(Pattern.compile("log4j-core-(.*?).jar"), new Replacement(
+    fileAndContentReplacementMap.put(Pattern.compile("log4j-core-?(.*?).jar"), new Replacement(
         "log4j-core-" + newLog4jVersion + ".jar",
         new File("lib/log4j-core-" + newLog4jVersion + ".jar")));
 
-    fileAndContentReplacementMap.put(Pattern.compile("log4j-api-(.*?).jar"), new Replacement(
+    fileAndContentReplacementMap.put(Pattern.compile("log4j-api-?(.*?).jar"), new Replacement(
         "log4j-api-" + newLog4jVersion + ".jar",
         new File("lib/log4j-api-" + newLog4jVersion + ".jar")));
 
-    fileAndContentReplacementMap.put(Pattern.compile("log4j-1.2-api-(.*?).jar"), new Replacement(
+    fileAndContentReplacementMap.put(Pattern.compile("log4j-1.2-api-?(.*?).jar"), new Replacement(
         "log4j-1.2-api-" + newLog4jVersion + ".jar",
         new File("lib/log4j-1.2-api-" + newLog4jVersion + ".jar")));
 
-    fileAndContentReplacementMap.put(Pattern.compile("log4j-slf4j-impl-(.*?).jar"), new Replacement(
+    fileAndContentReplacementMap.put(Pattern.compile("log4j-slf4j-impl-?(.*?).jar"), new Replacement(
         "log4j-slf4j-impl-" + newLog4jVersion + ".jar",
         new File("lib/log4j-slf4j-impl-" + newLog4jVersion + ".jar")));
+
+    fileAndContentReplacementMap.put(Pattern.compile("log4j-web-?(.*?).jar"), new Replacement(
+        "log4j-web-" + newLog4jVersion + ".jar",
+        new File("lib/log4j-web-" + newLog4jVersion + ".jar")));
 
     // Matches the log4j files for the XProc Calabash engine.
     fileAndContentReplacementMap.put(Pattern.compile("calabash-log4j-core-(.*?).jar"), new Replacement(
@@ -184,6 +189,14 @@ public class Log4jUpgrader extends Log4jSearcher {
 
     if (file.getName().endsWith("third-party-components.xml")) {
       newContent = applyPatterns(thirdPartyReplacementMap, newContent);
+    }
+
+    if (file.getName().matches("(log4j-.*-)([0-9\\.]+)(.LICENSE.txt)")) {
+      String newFileName = file.getName().replaceAll("(log4j-.*-)([0-9\\.]+)(.LICENSE.txt)", "$1" + newLog4jVersion + "$3");
+      Path targetPath = file.toPath().resolveSibling(newFileName);
+      System.out.print("Renaming: " + targetPath + " into " + targetPath.toFile().getName() + " .. ");
+      Files.move(file.toPath(), targetPath);
+      System.out.println("ok.");
     }
 
     if (!newContent.equals(content)) {

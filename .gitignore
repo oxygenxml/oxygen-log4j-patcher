@@ -1,5 +1,2 @@
 test
-target/classes/META-INF/MANIFEST.MF
-target/classes/META-INF/maven/com.oxygemnxml/oxygen-log4j-patcher/pom.properties
-target/classes/META-INF/maven/com.oxygemnxml/oxygen-log4j-patcher/pom.xml
-target/test-classes/
+target/

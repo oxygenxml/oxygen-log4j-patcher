@@ -25,7 +25,14 @@ echo   - com.oxygenxml.developer
 echo  subfolders from the Eclipse 'dropins' folder.
 echo  Example, linux: /home/user/eclipse/dropins/com.oxygenxml.editor_...
 echo  Example, mac:   /Users/user/Eclipse.app/Contents/Eclipse/dropins/com.oxygenxml.editor...
-echo 
+echo  
+echo For the Oxygen XML Web Author installations:
+echo   Hint: you may locate the installation directory by looking into Administration Page \(e.g.: https://www.[YOUR-WEB-AUTHOR-HOSTNAME]/oxygen-xml-web-author/app/admin.html\) at General section.
+echo  In case of "All Platforms" installation, the directory where the archive was extracted. It should contain the "tomcat" directory inside.
+echo  In case of "Web Application Archive" installation, the directory must be the root directory of your servlet container \(e.g. Tomcat\).
+echo  In case of "Linux" and "Windows" installations, the installation directory. It should contain the "tomcat" directory inside.
+echo  Example: D:\oxygen-xml-web-author
+echo .
 echo Enter path:
 read LINE </dev/tty
 export OXYGEN_HOME=$LINE
@@ -77,7 +84,7 @@ echo   Type 'u' - for upgrading the log4j library
 echo   Type 'r' - for keeping the log4j library, but removing the vulnerable JNDI classes from it.
 read STRATEGY </dev/tty
 echo
-echo Make sure the Oxygen application is closed before proceeding.
+echo Make sure the Oxygen application or server is closed before proceeding.
 echo Type ENTER when ready...
 read W </dev/tty
 
