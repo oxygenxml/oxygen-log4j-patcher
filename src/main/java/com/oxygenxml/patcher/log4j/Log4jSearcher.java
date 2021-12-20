@@ -8,6 +8,7 @@ package com.oxygenxml.patcher.log4j;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 
 public abstract class Log4jSearcher {
   
@@ -40,19 +41,24 @@ public abstract class Log4jSearcher {
 
   private int scanFiles(File folder) throws IOException {
     int noOfChanges = 0;
-    File[] files = folder.listFiles();
-
-    for (File file : files) {
-      if (file.isDirectory()) {
-        noOfChanges += scanFiles(file);
-      } else {
-        String fileName = file.getName();
-        if (fileName.contains("log4j") && fileName.endsWith(".jar")) {
-          noOfChanges += processLog4jFile(file);
-        } else if (canContainLog4jReferences(fileName)) {
-          processLog4jReferencesInContentOfFile(file);
-          noOfChanges ++;
+    if(folder.isDirectory()) {
+      File[] files = folder.listFiles();
+      if(files != null) {
+        for (File file : files) {
+          if (file.isDirectory()) {
+            noOfChanges += scanFiles(file);
+          } else {
+            String fileName = file.getName();
+            if (fileName.contains("log4j") && fileName.endsWith(".jar")) {
+              noOfChanges += processLog4jFile(file);
+            } else if (canContainLog4jReferences(fileName)) {
+              processLog4jReferencesInContentOfFile(file);
+              noOfChanges ++;
+            }
+          }
         }
+      } else {
+        throw new AccessDeniedException(folder.getAbsolutePath());
       }
     }
     return noOfChanges;
