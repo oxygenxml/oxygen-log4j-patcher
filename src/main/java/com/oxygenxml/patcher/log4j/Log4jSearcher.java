@@ -23,7 +23,7 @@ public abstract class Log4jSearcher {
    * @param folderToProcess The root folder to process, typically an Oxygen installation.
    */
   public Log4jSearcher(File folderToProcess) {
-    this.folderToProcess = folderToProcess;
+    this.folderToProcess = folderToProcess;    
   }
 
   /**
@@ -33,7 +33,7 @@ public abstract class Log4jSearcher {
    * @throws IOException When the replacement failed.
    */
   public int scanFiles() throws IOException {
-    System.out.println("Start scanning.");
+    System.out.println("Start scanning: " + folderToProcess.getAbsolutePath());
     int noOfChanges = scanFiles(folderToProcess);
     System.out.println("Performed " + noOfChanges + " changes.");
     return noOfChanges;
@@ -48,17 +48,22 @@ public abstract class Log4jSearcher {
           if (file.isDirectory()) {
             noOfChanges += scanFiles(file);
           } else {
-            String fileName = file.getName();
-            if (fileName.contains("log4j") && fileName.endsWith(".jar")) {
-              noOfChanges += processLog4jFile(file);
-            } else if (canContainLog4jReferences(fileName)) {
-              noOfChanges += processLog4jReferencesInContentOfFile(file);
-            }
+            noOfChanges = processFile(noOfChanges, file);
           }
         }
       } else {
         throw new AccessDeniedException(folder.getAbsolutePath());
       }
+    }
+    return noOfChanges;
+  }
+
+  private int processFile(int noOfChanges, File file) throws IOException {
+    String fileName = file.getName();
+    if (fileName.contains("log4j") && fileName.endsWith(".jar")) {
+      noOfChanges += processLog4jFile(file);
+    } else if (canContainLog4jReferences(fileName)) {
+      noOfChanges += processLog4jReferencesInContentOfFile(file);
     }
     return noOfChanges;
   }
