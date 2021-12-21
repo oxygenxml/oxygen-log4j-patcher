@@ -34,15 +34,17 @@ echo  In case of "Linux" and "Windows" installations, the installation directory
 echo  Example: D:\oxygen-xml-web-author
 echo .
 
-set /p OXYGEN_HOME_PATH=Enter path:  
+set OLD_OXYGEN_HOME=%OXYGEN_HOME%
 
-if not exist "%OXYGEN_HOME_PATH%" (
-  echo The folder does not exist: %OXYGEN_HOME_PATH%
+set /p OXYGEN_HOME=Enter path:  
+
+if not exist "%OXYGEN_HOME%" (
+  echo The folder does not exist: %OXYGEN_HOME%
   goto :end
 ) 
 
-if exist "%OXYGEN_HOME_PATH%\jre\bin\java.exe" (
-  set JAVA_HOME=%OXYGEN_HOME_PATH%\jre
+if exist "%OXYGEN_HOME%\jre\bin\java.exe" (
+  set JAVA_HOME=%OXYGEN_HOME%\jre
 ) 
 
 if not exist "%JAVA_HOME%\bin\java.exe" ( 
@@ -54,7 +56,7 @@ if not exist "%JAVA_HOME%\bin\java.exe" (
 echo Using java from: %JAVA_HOME%
 
 echo Please confirm that you want to apply the patch over the folder:
-echo %OXYGEN_HOME_PATH%
+echo %OXYGEN_HOME%
 set /p CONFIRM=(yes/no)
 if not "%CONFIRM%"=="yes" (
   goto :end
@@ -71,12 +73,13 @@ echo Configuration ok.
 echo Make sure the Oxygen application or server is closed before proceeding.
 set /p MSG= Press ENTER when ready...
 
-"%JAVA_HOME%\bin\java.exe" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "%OXYGEN_HOME_PATH%" "%STRATEGY%"
+@echo on
+"%JAVA_HOME%\bin\java.exe" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "%OXYGEN_HOME%" "%STRATEGY%"
 
 rem Unset the variables
 
 set CONFIRM=
-set OXYGEN_HOME_PATH=
+set OXYGEN_HOME=%OLD_OXYGEN_HOME%
 
 :end
 echo Leaving..
