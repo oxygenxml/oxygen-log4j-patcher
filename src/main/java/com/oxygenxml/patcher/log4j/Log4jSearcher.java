@@ -52,8 +52,7 @@ public abstract class Log4jSearcher {
             if (fileName.contains("log4j") && fileName.endsWith(".jar")) {
               noOfChanges += processLog4jFile(file);
             } else if (canContainLog4jReferences(fileName)) {
-              processLog4jReferencesInContentOfFile(file);
-              noOfChanges ++;
+              noOfChanges += processLog4jReferencesInContentOfFile(file);
             }
           }
         }
@@ -66,7 +65,7 @@ public abstract class Log4jSearcher {
 
   protected abstract boolean canContainLog4jReferences(String fileName);
 
-  protected abstract void processLog4jReferencesInContentOfFile(File file) throws IOException;
+  protected abstract int processLog4jReferencesInContentOfFile(File file) throws IOException;
 
   protected abstract int processLog4jFile(File file) throws IOException;
 

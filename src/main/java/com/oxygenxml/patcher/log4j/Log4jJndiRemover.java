@@ -38,8 +38,9 @@ public class Log4jJndiRemover extends Log4jSearcher {
   }
 
   @Override
-  protected void processLog4jReferencesInContentOfFile(File file) throws IOException {
+  protected int processLog4jReferencesInContentOfFile(File file) throws IOException {
     // Preserves the same file names. Does not need to change references in files.
+    return 0;
   }
 
   @Override

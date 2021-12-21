@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class Log4jUpgdaderTest {
+  private static final String SOME_FILE_WITH_NO_REFERENCES_XML = "some-file-with-no-references.xml";
   private static final String THIRD_PARTY_COMPONENTS_XML = "third-party-components.xml";
   private Path                rootPath                   = Paths.get("test");
 
@@ -81,6 +82,7 @@ public class Log4jUpgdaderTest {
             for (String ext : Log4jUpgrader.EXTENSIONS_OF_FILES_WITH_REFERENCES) {
               touch(f, "some" + ext, "Library references log4j-core-2.14.0.jar;log4j-api-2.14.0.jar;log4j-1.2-api-2.14.0.jar");
             }
+            touch(f, SOME_FILE_WITH_NO_REFERENCES_XML, "No references to log jars.");
 
             touch(f, THIRD_PARTY_COMPONENTS_XML, ""
                 + "  <version>x.y.z</version>\n\n"
@@ -117,7 +119,10 @@ public class Log4jUpgdaderTest {
             assertTrue(new File(f, "log4j-1.2-api-" + Log4jUpgrader.NEW_LOG4J_VERSION + ".jar").exists());
           } else {
             try {
-              if (Log4jUpgrader.canContainLog4jReferencesInternal(f.getName()) && !f.getName().equals(THIRD_PARTY_COMPONENTS_XML)) {
+              if (Log4jUpgrader.canContainLog4jReferencesInternal(f.getName()) 
+                  && !f.getName().equals(THIRD_PARTY_COMPONENTS_XML)
+                  && !f.getName().equals(SOME_FILE_WITH_NO_REFERENCES_XML)
+                  ) {
                 String content = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
                 assertEquals("Library references log4j-core-" + Log4jUpgrader.NEW_LOG4J_VERSION + ".jar;" +
                 "log4j-api-" + Log4jUpgrader.NEW_LOG4J_VERSION + ".jar;" +
@@ -156,10 +161,13 @@ public class Log4jUpgdaderTest {
   }
 
   @Test
-  public void testJndiRemover() throws IOException {
+  public void testUpgrader() throws IOException {
     Patcher.main(new String[] {rootPath.toFile().getAbsolutePath(), "u"});
+    assertEquals(65, Patcher.changes);
     Patcher.main(new String[] {rootPath.toFile().getAbsolutePath(), "u"});
+    assertEquals(0, Patcher.changes);
     Patcher.main(new String[] {rootPath.toFile().getAbsolutePath(), "u"});
+    assertEquals(0, Patcher.changes);
     checkTestDir();
   }
 

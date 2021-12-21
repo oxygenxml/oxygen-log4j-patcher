@@ -18,6 +18,8 @@ public class Patcher {
   static final String STRATEGY_UPGRADE = "upgrade";
   static final String STRATEGY_BOTH = "both";
 
+  static int changes = 0;
+  
   /**
    * Entry point.
    * 
@@ -26,6 +28,7 @@ public class Patcher {
    */
   public static void main(String[] args) throws IOException {
 
+    changes = 0;
     System.out.println("Java version is " + System.getProperty("java.version"));
     
     String folderToProcess = getFolderToProcess(args);
@@ -33,13 +36,13 @@ public class Patcher {
 
     try {
       if (STRATEGY_UPGRADE.equals(strategy)) {
-        new Log4jUpgrader(new File(folderToProcess)).scanFiles();
+        changes = new Log4jUpgrader(new File(folderToProcess)).scanFiles();
       } else if (STRATEGY_REMOVE_JNDI.equals(strategy)) {
-        new Log4jJndiRemover(new File(folderToProcess)).scanFiles();
+        changes = new Log4jJndiRemover(new File(folderToProcess)).scanFiles();
       } else if (STRATEGY_BOTH.equals(strategy)) {
         System.out.println("Applying both upgrade, and then removal of Jndi class from the upgraded jars.");
-        new Log4jUpgrader(new File(folderToProcess)).scanFiles();
-        new Log4jJndiRemover(new File(folderToProcess)).scanFiles();
+        changes = new Log4jUpgrader(new File(folderToProcess)).scanFiles();
+        changes += new Log4jJndiRemover(new File(folderToProcess)).scanFiles();
       } else {
         System.out.println(
             "Unknown patching strategy: '" + strategy + "'. ");

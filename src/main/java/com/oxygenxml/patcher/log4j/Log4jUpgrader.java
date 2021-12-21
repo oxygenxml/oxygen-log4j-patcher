@@ -177,8 +177,8 @@ public class Log4jUpgrader extends Log4jSearcher {
    * @param file The file that can contain references.
    * @throws IOException When the file cannot be accessed.
    */
-  protected void processLog4jReferencesInContentOfFile(File file) throws IOException {
-
+  protected int processLog4jReferencesInContentOfFile(File file) throws IOException {
+    int changed = 0;
     // Read the content.
     byte[] bytes = Files.readAllBytes(file.toPath());
     String content = new String(bytes, StandardCharsets.UTF_8);
@@ -197,6 +197,7 @@ public class Log4jUpgrader extends Log4jSearcher {
       System.out.print("Renaming: " + targetPath + " into " + targetPath.toFile().getName() + " .. ");
       Files.move(file.toPath(), targetPath);
       System.out.println("ok.");
+      changed = 1;
     }
 
     if (!newContent.equals(content)) {
@@ -204,8 +205,10 @@ public class Log4jUpgrader extends Log4jSearcher {
       System.out.print("Updating references in: " + file + " .. ");
       Files.write(file.toPath(), newContent.getBytes(StandardCharsets.UTF_8));
       System.out.println("ok.");
+      changed = 1;
     }
-
+    
+    return changed;
   }
 
   private String applyPatterns(HashMap<Pattern, Replacement> patterns, String newContent) {
