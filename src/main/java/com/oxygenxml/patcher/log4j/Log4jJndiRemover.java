@@ -73,7 +73,10 @@ public class Log4jJndiRemover extends Log4jSearcher {
       }
     }
 
-    Files.copy(tmp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    if (removed > 0) {
+      // No changes.
+      Files.copy(tmp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    }
     Files.delete(tmp.toPath());
 
     return removed;
