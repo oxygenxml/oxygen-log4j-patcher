@@ -1,6 +1,6 @@
-com/oxygenxml/patcher/log4j/Log4jUpgrader.class
-com/oxygenxml/patcher/log4j/Patcher.class
-com/oxygenxml/patcher/log4j/Log4jUpgrader$1.class
-com/oxygenxml/patcher/log4j/Log4jJndiRemover.class
-com/oxygenxml/patcher/log4j/Log4jUpgrader$Replacement.class
-com/oxygenxml/patcher/log4j/Log4jSearcher.class
+com\oxygenxml\patcher\log4j\Patcher.class
+com\oxygenxml\patcher\log4j\Log4jJndiRemover.class
+com\oxygenxml\patcher\log4j\Log4jSearcher.class
+com\oxygenxml\patcher\log4j\Log4jUpgrader$1.class
+com\oxygenxml\patcher\log4j\Log4jUpgrader$Replacement.class
+com\oxygenxml\patcher\log4j\Log4jUpgrader.class

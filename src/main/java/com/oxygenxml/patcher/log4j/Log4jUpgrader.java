@@ -191,15 +191,6 @@ public class Log4jUpgrader extends Log4jSearcher {
       newContent = applyPatterns(thirdPartyReplacementMap, newContent);
     }
 
-    if (file.getName().matches("(log4j-.*-)([0-9\\.]+)(.LICENSE.txt)")) {
-      String newFileName = file.getName().replaceAll("(log4j-.*-)([0-9\\.]+)(.LICENSE.txt)", "$1" + newLog4jVersion + "$3");
-      Path targetPath = file.toPath().resolveSibling(newFileName);
-      System.out.print("Renaming: " + targetPath + " into " + targetPath.toFile().getName() + " .. ");
-      Files.move(file.toPath(), targetPath);
-      System.out.println("ok.");
-      changed = 1;
-    }
-
     if (!newContent.equals(content)) {
       // Write the content.
       System.out.print("Updating references in: " + file + " .. ");
