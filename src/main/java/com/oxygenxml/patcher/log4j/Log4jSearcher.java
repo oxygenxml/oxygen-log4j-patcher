@@ -8,7 +8,6 @@ package com.oxygenxml.patcher.log4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 
 public abstract class Log4jSearcher {
   
@@ -52,7 +51,7 @@ public abstract class Log4jSearcher {
           }
         }
       } else {
-        throw new AccessDeniedException(folder.getAbsolutePath());
+        System.out.println("Cannot list files from " + folder);
       }
     }
     return noOfChanges;
