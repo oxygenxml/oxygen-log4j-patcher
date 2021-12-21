@@ -97,7 +97,11 @@ public class Patcher {
   }
 
   private static String getFolderToProcess(String[] args) {
-    String installFolder = System.getenv("OXYGEN_HOME");
+    String installFolder = null;
+    if (!isWindows()) {
+      // Only on Linux and Mac we pass this environment var.
+     System.getenv("OXYGEN_HOME");
+    }
     if (installFolder == null) {
       if (args.length > 0) {
         installFolder = args[0];
