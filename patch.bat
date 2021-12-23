@@ -34,29 +34,30 @@ echo  In case of "Linux" and "Windows" installations, the installation directory
 echo  Example: D:\oxygen-xml-web-author
 echo .
 
-set OLD_OXYGEN_HOME=%OXYGEN_HOME%
+set "OLD_OXYGEN_HOME=%OXYGEN_HOME%"
 
-set /p OXYGEN_HOME=Enter path:  
+set /p "OXYGEN_HOME=Enter path:"
 
 if not exist "%OXYGEN_HOME%" (
-  echo The folder does not exist: %OXYGEN_HOME%
+  echo The folder does not exist: "%OXYGEN_HOME%"
   goto :end
 ) 
 
 if exist "%OXYGEN_HOME%\jre\bin\java.exe" (
-  set JAVA_HOME=%OXYGEN_HOME%\jre
-) 
+  set "JAVA_HOME=%OXYGEN_HOME%\jre"
+)
 
 if not exist "%JAVA_HOME%\bin\java.exe" ( 
     echo Cannot find the Java executable. 
-    echo Tried with the JAVA_HOME: %JAVA_HOME%
+    echo Tried with the JAVA_HOME: "%JAVA_HOME%"
     echo Please configure correctly the JAVA_HOME system environment.
     goto :end
 )
-echo Using java from: %JAVA_HOME%
+
+echo Using java from: "%JAVA_HOME%"
 
 echo Please confirm that you want to apply the patch over the folder:
-echo %OXYGEN_HOME%
+echo "%OXYGEN_HOME%"
 set /p CONFIRM=(yes/no)
 if not "%CONFIRM%"=="yes" (
   goto :end
@@ -79,7 +80,7 @@ set /p MSG= Press ENTER when ready...
 rem Unset the variables
 
 set CONFIRM=
-set OXYGEN_HOME=%OLD_OXYGEN_HOME%
+set "OXYGEN_HOME=%OLD_OXYGEN_HOME%"
 
 :end
 echo Leaving..
