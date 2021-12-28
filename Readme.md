@@ -2,6 +2,8 @@
 This is a tool that updates the log4j version 2 library to version 2.17 in an:
  - Oxygen XML Editor/Author/Developer standalone installation, or
  - Oxygen XML Editor/Author/Developer plugin for Eclipse installation, or
+ - Oxygen PDF Chemistry installation, or
+ - Oxygen Publishing Engine installation, or
  - Oxygen XML Web Author for "all platforms" installation
 
 The recommended Oxygen versions to apply this tool on range from 16.1 to 24.0 inclusive.
