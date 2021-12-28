@@ -85,7 +85,7 @@ echo   Type 'r' - for keeping the current log4j library, but removing the vulner
 read STRATEGY </dev/tty
 echo
 echo Make sure the Oxygen application or server is closed before proceeding.
-echo Type ENTER when ready...
+echo Press ENTER when ready...
 read W </dev/tty
 
 "$OXYGEN_JAVA" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "$STRATEGY"
