@@ -22,21 +22,21 @@ Unzip it to a directory of your choice. Keep track of the directory where you ha
 ### On Windows:
 
  1. Make sure the Oxygen application is closed.
- 1. Start a terminal with administrative privileges. For this press the "Start" button, type "cmd", then choose "Run as administrator" from the  menu.
- 1. Change directory to the directory of the 'patch.bat' file. ('cd c:\user_home\Downloads\oxygen-log4j-patcher')
- 1. Type 'patch.bat' in the command terminal and press ENTER.
+ 1. Start a "Command Prompt" window with administrative privileges. For this press the "Start" button, type `cmd`, then choose "Run as administrator" from the menu.
+ 1. Change directory to the directory of the 'patch.bat' file. For example, if you extracted the archive in your 'Downloads' folder, type `cd %USERPROFILE%/Downloads/oxygen-log4j-patcher-main` in the "Command Prompt" window and press ENTER.
+ 1. Type `patch.bat` in the "Command Prompt" window and press ENTER.
  1. Follow the instructions given by the script. 
    
 ### On Mac:
  1. Make sure you run as an user with administrator privileges.
- 1. Change directory to the directory of the 'patch.sh' file. ('cd /Users/user/Downloads/oxygen-log4j-patcher' for instance ) 
- 1. Type 'sh patch.sh' in the terminal and press ENTER.
+ 1. Change directory to the directory of the 'patch.sh' file. (`cd /Users/user/Downloads/oxygen-log4j-patcher-main` for instance ) 
+ 1. Type `sh patch.sh` in the terminal and press ENTER.
  1. Follow the instructions given by the script.
     
 ### On Linux:
  1. If the Oxygen application has been installed as a superuser, then type in a terminal: "sudo -s" in order to open a terminal with enough rights.
- 1. Change directory to the directory of the 'patch.sh' file. ('cd /home/user/downloads/oxygen-log4j-patcher' for instance )
- 1. Type 'sh patch.sh' in the terminal and press ENTER.
+ 1. Change directory to the directory of the 'patch.sh' file. (`cd ~/Downloads/oxygen-log4j-patcher-main` for instance )
+ 1. Type `sh patch.sh` in the terminal and press ENTER.
  1. Follow the instructions given by the script.
 
 
