@@ -1,5 +1,5 @@
 # Oxygen XML Patch Tool for Apache Log4j vulnerability CVE-2021-44228, CVE-2021-45046 and CVE-2021-45105
-This is a tool that updates the log4j version 2 library to version 2.17 in an:
+This is a tool that updates the log4j version 2 library to version 2.17.1 in an:
  - Oxygen XML Editor/Author/Developer standalone installation, or
  - Oxygen XML Editor/Author/Developer plugin for Eclipse installation, or
  - Oxygen PDF Chemistry installation, or
@@ -8,7 +8,7 @@ This is a tool that updates the log4j version 2 library to version 2.17 in an:
 
 The recommended Oxygen versions to apply this tool on range from 16.1 to 24.0 inclusive.
 
-For newer Oxygen versions, like 22.1, 23.1 or 24.0 there are kits available on the Oxygen website that contain the log4j 2.16 library (resolves CVE-2021-44228 and CVE-2021-45046), at https://www.oxygenxml.com/software_archive.html and https://www.oxygenxml.com/download.html respectively.
+For newer Oxygen versions, like 22.1, 23.1 or 24.0 there are kits available on the Oxygen website that contain the log4j 2.17 library (resolves CVE-2021-44228 and CVE-2021-45046), at https://www.oxygenxml.com/software_archive.html and https://www.oxygenxml.com/download.html respectively.
 
 It will not work for Web Author or Content Fusion. For these please see the security advisory at https://www.oxygenxml.com/security/advisory/CVE-2021-44228.html to determine the appropriate action. For Oxygen XML Content Fusion you should use this script: https://github.com/oxygenxml/content-fusion-log4j-patcher
 

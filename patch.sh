@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo This script upgrades the log4j library to version 2.16 in an Oxygen XML application.
+echo This script upgrades the log4j library to version 2.17.1 in an Oxygen XML application.
 echo It works for Oxygen standalone distributions and Eclipse plugin distributions.
 echo 
 echo Please enter the full path to the Oxygen installation folder.
