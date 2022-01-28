@@ -74,6 +74,8 @@ echo Configuration ok.
 echo Make sure the Oxygen application or server is closed before proceeding.
 set /p MSG= Press ENTER when ready...
 
+rem Remove extra slash at end
+IF %OXYGEN_HOME:~-1%==\ SET OXYGEN_HOME=%OXYGEN_HOME:~0,-1%
 @echo on
 "%JAVA_HOME%\bin\java.exe" -cp target/classes com.oxygenxml.patcher.log4j.Patcher "%OXYGEN_HOME%" "%STRATEGY%"
 
